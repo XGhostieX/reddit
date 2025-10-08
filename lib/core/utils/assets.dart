@@ -1,5 +1,5 @@
 class Assets {
-  static const logo = 'assets/logo.png';
+  static const logo = 'assets/images/logo.png';
   static const awesome = 'assets/images/awesome.png';
   static const gold = 'assets/images/gold.png';
   static const google = 'assets/images/google.png';
