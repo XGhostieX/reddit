@@ -22,6 +22,3 @@ subprojects {
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
-dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:34.4.0"))
-}

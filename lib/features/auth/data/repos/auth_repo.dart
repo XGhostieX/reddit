@@ -1,3 +1,8 @@
+import 'package:dartz/dartz.dart';
+
+import '../../../../core/errors/failure.dart';
+import '../../../../core/models/user_model.dart';
+
 abstract class AuthRepo {
-  void signInWithGoogle();
+  Future<Either<Failure, UserModel>> signInWithGoogle();
 }

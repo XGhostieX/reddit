@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class UserModel {
   final String name;
   final String profile;
@@ -65,30 +63,5 @@ class UserModel {
   @override
   String toString() {
     return 'UserModel(name: $name, profilePic: $profile, banner: $banner, uid: $uid, isAuthenticated: $isAuthenticated, karma: $karma, awards: $awards)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is UserModel &&
-        other.name == name &&
-        other.profile == profile &&
-        other.banner == banner &&
-        other.uid == uid &&
-        other.isAuthenticated == isAuthenticated &&
-        other.karma == karma &&
-        listEquals(other.awards, awards);
-  }
-
-  @override
-  int get hashCode {
-    return name.hashCode ^
-        profile.hashCode ^
-        banner.hashCode ^
-        uid.hashCode ^
-        isAuthenticated.hashCode ^
-        karma.hashCode ^
-        awards.hashCode;
   }
 }
