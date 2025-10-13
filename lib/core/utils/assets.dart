@@ -10,4 +10,6 @@ class Assets {
   static const rocket = 'assets/images/rocket.png';
   static const thankYou = 'assets/images/thankyou.png';
   static const til = 'assets/images/til.png';
+  static const avatar = 'assets/images/avatar.webp';
+  static const banner = 'assets/images/banner.jpg';
 }

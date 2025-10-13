@@ -1,1 +1,3 @@
-abstract class AuthRepo {}
+abstract class AuthRepo {
+  void signInWithGoogle();
+}

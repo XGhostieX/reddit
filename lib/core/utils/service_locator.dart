@@ -1,29 +1,19 @@
-// import 'package:dio/dio.dart';
-// import 'package:get_it/get_it.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-// final getIt = GetIt.instance;
+import '../../features/auth/data/repos/auth_repo_impl.dart';
 
-// void setup() {
-//   getIt.registerSingleton<Dio>(Dio());
-//   getIt.registerSingleton<DatabaseHelper>(SQLiteDatabaseHelper());
-//   getIt.registerSingleton<ApiService>(ApiService(getIt.get<Dio>()));
-//   getIt.registerSingleton<Mapper>(MapperImpl());
-//   getIt.registerSingleton<AuthLocalDataSource>(
-//     AuthLocalDataSourceImpl(getIt.get<DatabaseHelper>()),
-//   );
-//   getIt.registerSingleton<AuthRepo>(
-//     AuthRepoImpl(getIt.get<AuthLocalDataSource>()),
-//   );
-//   getIt.registerSingleton<HomeRepo>(
-//     HomeRepoImpl(getIt.get<ApiService>(), getIt.get<Mapper>()),
-//   );
-//   getIt.registerSingleton<DetailsRepo>(
-//     DetailsRepoImpl(getIt.get<ApiService>(), getIt.get<Mapper>()),
-//   );
-//   getIt.registerSingleton<SearchRepo>(
-//     SearchRepoImpl(getIt.get<ApiService>(), getIt.get<Mapper>()),
-//   );
-//   getIt.registerSingleton<ActorRepo>(
-//     ActorRepoImpl(getIt.get<ApiService>(), getIt.get<Mapper>()),
-//   );
-// }
+final firebaseFirestoreProvider = Provider((ref) => FirebaseFirestore.instance);
+final firebaseAuthProvider = Provider((ref) => FirebaseAuth.instance);
+final firebaseStorageProvider = Provider((ref) => FirebaseStorage.instance);
+final googleSignInProvider = Provider((ref) => GoogleSignIn.instance);
+final authRepoProvider = Provider(
+  (ref) => AuthRepoImpl(
+    ref.read(firebaseFirestoreProvider),
+    ref.read(firebaseAuthProvider),
+    ref.read(googleSignInProvider),
+  ),
+);
