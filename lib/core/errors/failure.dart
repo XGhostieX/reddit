@@ -41,10 +41,11 @@ class AuthFailure extends Failure {
     if (e.description!.contains('CANCELLED') ||
         e.description!.contains('cancelled')) {
       return AuthFailure('Sign in cancelled by user');
-    } else if (e.description!.contains('NETWORK_ERROR') ||
+    } else if (e.description!.contains('NETWORK') ||
         e.description!.contains('network')) {
       return AuthFailure('Network error occurred');
-    } else if (e.description!.contains('INVALID_ACCOUNT')) {
+    } else if (e.description!.contains('INVALID') ||
+        e.description!.contains('invalid')) {
       return AuthFailure('Invalid account selected');
     } else {
       return AuthFailure('Google Sign-In failed: ${e.description!}');
