@@ -55,10 +55,12 @@ class AuthRepoImpl extends AuthRepo {
         user = await getUser(userCredential.user!.uid).first;
       }
       return right(user);
+    } on FirebaseAuthException catch (e) {
+      return left(AuthFailure.handleFirebaseAuthException(e));
     } on GoogleSignInException catch (e) {
-      return left(GoogleSignInFailure.handleGoogleSignInException(e));
+      return left(AuthFailure.handleGoogleSignInException(e));
     } catch (e) {
-      return Left(GoogleSignInFailure(e.toString()));
+      return Left(AuthFailure(e.toString()));
     }
   }
 }
