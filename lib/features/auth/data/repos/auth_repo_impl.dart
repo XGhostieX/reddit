@@ -16,12 +16,13 @@ class AuthRepoImpl extends AuthRepo {
   AuthRepoImpl(this.firebaseFirestore, this.firebaseAuth, this.googleSignIn);
 
   CollectionReference get _users => firebaseFirestore.collection('users');
-  Stream<UserModel> getUser(String uid) {
+
+  Future<UserModel> getUserData(String uid) {
     return _users
         .doc(uid)
-        .snapshots()
-        .map(
-          (event) => UserModel.fromMap(event.data() as Map<String, dynamic>),
+        .get()
+        .then(
+          (value) => UserModel.fromMap(value.data() as Map<String, dynamic>),
         );
   }
 
@@ -52,7 +53,7 @@ class AuthRepoImpl extends AuthRepo {
         );
         await _users.doc(userCredential.user!.uid).set(user.toMap());
       } else {
-        user = await getUser(userCredential.user!.uid).first;
+        user = await getUserData(userCredential.user!.uid);
       }
       return right(user);
     } on FirebaseAuthException catch (e) {
