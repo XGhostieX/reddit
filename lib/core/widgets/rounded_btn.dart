@@ -5,11 +5,13 @@ import '../theme/app_colors.dart';
 class RoundedBtn extends StatelessWidget {
   final String label;
   final Widget? icon;
+  final Color bgColor;
   final VoidCallback onPressed;
   const RoundedBtn({
     super.key,
     required this.label,
     this.icon,
+    this.bgColor = AppColors.greyColor,
     required this.onPressed,
   });
 
@@ -22,7 +24,7 @@ class RoundedBtn extends StatelessWidget {
         label: Text(label, style: const TextStyle(fontSize: 18)),
         icon: icon,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.greyColor,
+          backgroundColor: bgColor,
           minimumSize: const Size(double.infinity, 50),
         ),
       ),

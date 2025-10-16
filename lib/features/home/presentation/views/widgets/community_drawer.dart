@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
+
+import '../../../../../core/utils/app_router.dart';
 
 class CommunityDrawer extends ConsumerWidget {
   const CommunityDrawer({super.key});
@@ -13,7 +16,8 @@ class CommunityDrawer extends ConsumerWidget {
             ListTile(
               title: const Text('Create a Community'),
               leading: const Icon(Icons.add_rounded),
-              onTap: () {},
+              onTap: () =>
+                  Routemaster.of(context).push(AppRouter.kCreateCommunity),
             ),
           ],
         ),

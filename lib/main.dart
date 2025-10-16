@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 
 import 'core/theme/app_theme.dart';
-import 'core/utils/router.dart';
+import 'core/utils/app_router.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -25,7 +25,9 @@ class Reddit extends StatelessWidget {
       title: 'Reddit',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
-      routerDelegate: RoutemasterDelegate(routesBuilder: (context) => routes),
+      routerDelegate: RoutemasterDelegate(
+        routesBuilder: (context) => AppRouter.routes,
+      ),
       routeInformationParser: const RoutemasterParser(),
     );
   }

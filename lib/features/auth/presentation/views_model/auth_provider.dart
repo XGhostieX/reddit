@@ -5,8 +5,8 @@ import 'package:routemaster/routemaster.dart';
 
 import '../../../../core/models/user_model.dart';
 import '../../../../core/utils/functions/display_message.dart';
-import '../../../../core/utils/service_locator.dart';
 import '../../data/repos/auth_repo.dart';
+import '../../data/repos/auth_repo_impl.dart';
 
 class AuthNotifier {
   final AuthRepo authRepo;

@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../../core/errors/failure.dart';
 import '../../../../core/models/user_model.dart';
 import '../../../../core/utils/assets.dart';
+import '../../../../core/utils/service_locator.dart';
 import 'auth_repo.dart';
 
 class AuthRepoImpl extends AuthRepo {
@@ -65,3 +67,11 @@ class AuthRepoImpl extends AuthRepo {
     }
   }
 }
+
+final authRepoProvider = Provider(
+  (ref) => AuthRepoImpl(
+    ref.read(firebaseFirestoreProvider),
+    ref.read(firebaseAuthProvider),
+    ref.read(googleSignInProvider),
+  ),
+);
