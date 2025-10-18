@@ -6,4 +6,5 @@ import '../../../../core/models/community_model.dart';
 abstract class CommunityRepo {
   Future<Either<Failure, void>> createCommunity(CommunityModel community);
   Stream<List<CommunityModel>> getUserCommunities(String uid);
+  Stream<CommunityModel> getCommunity(String name);
 }

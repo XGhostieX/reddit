@@ -45,6 +45,10 @@ class CommunityNotifier extends StateNotifier<bool> {
   Stream<List<CommunityModel>> getUserCommunities() {
     return communityRepo.getUserCommunities(ref.read(userProvider)!.uid);
   }
+
+  Stream<CommunityModel> getCommunity(String name) {
+    return communityRepo.getCommunity(name);
+  }
 }
 
 final communityNotifierProvider =
@@ -54,4 +58,9 @@ final communityNotifierProvider =
 
 final userCommunitiesProvider = StreamProvider(
   (ref) => ref.watch(communityNotifierProvider.notifier).getUserCommunities(),
+);
+
+final communityProvider = StreamProvider.family(
+  (ref, String name) =>
+      ref.watch(communityNotifierProvider.notifier).getCommunity(name),
 );

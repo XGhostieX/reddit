@@ -34,7 +34,9 @@ class CommunityDrawer extends ConsumerWidget {
                           ),
                         ),
                         title: Text('r/${communities[index].name}'),
-                        onTap: () {},
+                        onTap: () => Routemaster.of(
+                          context,
+                        ).push('/r/${communities[index].name}'),
                       ),
                     ),
                   ),

@@ -46,6 +46,17 @@ class CommunityRepoImpl implements CommunityRepo {
       return communities;
     });
   }
+
+  @override
+  Stream<CommunityModel> getCommunity(String name) {
+    return _communities
+        .doc(Uri.decodeComponent(name))
+        .snapshots()
+        .map(
+          (event) =>
+              CommunityModel.fromMap(event.data() as Map<String, dynamic>),
+        );
+  }
 }
 
 final communityRepoProvider = Provider(
