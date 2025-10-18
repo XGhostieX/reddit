@@ -1,31 +1,53 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:routemaster/routemaster.dart';
 
 import '../../../../core/models/user_model.dart';
 import '../../../../core/utils/functions/display_message.dart';
 import '../../data/repos/auth_repo.dart';
 import '../../data/repos/auth_repo_impl.dart';
 
-class AuthNotifier {
+class AuthNotifier extends StateNotifier<bool> {
   final AuthRepo authRepo;
   final Ref ref;
 
-  AuthNotifier(this.authRepo, this.ref);
+  AuthNotifier(this.authRepo, this.ref) : super(false);
+
+  Stream<UserModel> getUser(String uid) => authRepo.getUser(uid);
+
+  Stream<User?> get authStateChange => authRepo.authStateChange;
 
   void signInWithGoogle(BuildContext context) async {
+    state = true;
     final auth = await authRepo.signInWithGoogle();
-    auth.fold((failure) => displayMessage(failure.errMsg, true), (user) {
-      ref.read(userProvider.notifier).update((state) => user);
-      displayMessage('Welcome ${user.name}', false);
-      Routemaster.of(context).replace('/home');
-    });
+    auth.fold(
+      (failure) {
+        state = false;
+        displayMessage(failure.errMsg, true);
+      },
+      (user) {
+        state = false;
+        ref.read(userProvider.notifier).update((state) => user);
+        displayMessage('Welcome ${user.name}', false);
+        // Routemaster.of(context).replace('/home');
+      },
+    );
   }
 }
 
-final authNotifierProvider = Provider(
+final authNotifierProvider = StateNotifierProvider(
   (ref) => AuthNotifier(ref.watch(authRepoProvider), ref),
 );
 
 final userProvider = StateProvider<UserModel?>((ref) => null);
+
+final authStateChangeProvider = StreamProvider((ref) {
+  final authNotifier = ref.watch(authNotifierProvider.notifier);
+  return authNotifier.authStateChange;
+});
+
+final getUserProvider = StreamProvider.family((ref, String uid) {
+  final authNotifier = ref.watch(authNotifierProvider.notifier);
+  return authNotifier.getUser(uid);
+});

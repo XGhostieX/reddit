@@ -32,10 +32,17 @@ class Login extends StatelessWidget {
           const SizedBox(height: 30),
           Consumer(
             builder: (context, ref, child) => RoundedBtn(
-              label: 'Continue with Google',
-              icon: Image.asset(Assets.google, height: 40),
-              onPressed: () =>
-                  ref.read(authNotifierProvider).signInWithGoogle(context),
+              label: ref.watch(authNotifierProvider)
+                  ? ''
+                  : 'Continue with Google',
+              icon: ref.watch(authNotifierProvider)
+                  ? const CircularProgressIndicator()
+                  : Image.asset(Assets.google, height: 40),
+              onPressed: ref.watch(authNotifierProvider)
+                  ? () {}
+                  : () => ref
+                        .read(authNotifierProvider.notifier)
+                        .signInWithGoogle(context),
             ),
           ),
           const SizedBox(height: 30),

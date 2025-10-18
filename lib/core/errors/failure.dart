@@ -52,3 +52,61 @@ class AuthFailure extends Failure {
     }
   }
 }
+
+class FirebaseFailure extends Failure {
+  FirebaseFailure(super.errMsg);
+
+  factory FirebaseFailure.handleFirebaseException(FirebaseException e) {
+    switch (e.code) {
+      case 'permission-denied':
+        return FirebaseFailure(
+          'You don\'t have permission to access this data.',
+        );
+
+      case 'not-found':
+        return FirebaseFailure('The requested document was not found.');
+
+      case 'already-exists':
+        return FirebaseFailure('A document with this ID already exists.');
+
+      case 'resource-exhausted':
+        return FirebaseFailure('Too many requests. Please try again later.');
+
+      case 'failed-precondition':
+        return FirebaseFailure(
+          'Operation was rejected. Please check your data.',
+        );
+
+      case 'aborted':
+        return FirebaseFailure('The operation was aborted.');
+
+      case 'out-of-range':
+        return FirebaseFailure(
+          'The operation was attempted past the valid range.',
+        );
+
+      case 'unimplemented':
+        return FirebaseFailure('This operation is not implemented.');
+
+      case 'internal':
+        return FirebaseFailure('Internal server error. Please try again.');
+
+      case 'unavailable':
+        return FirebaseFailure(
+          'Service is temporarily unavailable. Please try again.',
+        );
+
+      case 'data-loss':
+        return FirebaseFailure('Unrecoverable data loss or corruption.');
+
+      case 'deadline-exceeded':
+        return FirebaseFailure('The operation timed out. Please try again.');
+
+      case 'cancelled':
+        return FirebaseFailure('The operation was cancelled.');
+
+      default:
+        return FirebaseFailure('A database error occurred: ${e.message}');
+    }
+  }
+}

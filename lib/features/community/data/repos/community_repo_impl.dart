@@ -25,8 +25,10 @@ class CommunityRepoImpl implements CommunityRepo {
         throw 'Community with the same name already exists!';
       }
       return right(_communities.doc(community.name).set(community.toMap()));
+    } on FirebaseException catch (e) {
+      return Left(FirebaseFailure.handleFirebaseException(e));
     } catch (e) {
-      return left(AuthFailure(e.toString()));
+      return Left(FirebaseFailure(e.toString()));
     }
   }
 }

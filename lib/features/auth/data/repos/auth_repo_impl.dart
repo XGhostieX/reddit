@@ -19,14 +19,18 @@ class AuthRepoImpl extends AuthRepo {
 
   CollectionReference get _users => firebaseFirestore.collection('users');
 
-  Future<UserModel> getUserData(String uid) {
+  @override
+  Stream<UserModel> getUser(String uid) {
     return _users
         .doc(uid)
-        .get()
-        .then(
-          (value) => UserModel.fromMap(value.data() as Map<String, dynamic>),
+        .snapshots()
+        .map(
+          (event) => UserModel.fromMap(event.data() as Map<String, dynamic>),
         );
   }
+
+  @override
+  Stream<User?> get authStateChange => firebaseAuth.authStateChanges();
 
   @override
   Future<Either<Failure, UserModel>> signInWithGoogle() async {
@@ -55,7 +59,7 @@ class AuthRepoImpl extends AuthRepo {
         );
         await _users.doc(userCredential.user!.uid).set(user.toMap());
       } else {
-        user = await getUserData(userCredential.user!.uid);
+        user = await getUser(userCredential.user!.uid).first;
       }
       return right(user);
     } on FirebaseAuthException catch (e) {
