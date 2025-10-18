@@ -59,7 +59,7 @@ class _CreateCommunityState extends ConsumerState<CreateCommunity> {
                         );
                       }
                       ref
-                          .watch(communityNotifierProvider.notifier)
+                          .read(communityNotifierProvider.notifier)
                           .createCommunity(
                             communityNameController.text.trim(),
                             context,

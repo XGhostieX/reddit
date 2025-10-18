@@ -31,15 +31,19 @@ class CommunityNotifier extends StateNotifier<bool> {
     );
     result.fold(
       (failure) {
-        state = false;
         displayMessage(failure.errMsg, true);
+        state = false;
       },
       (r) {
-        state = false;
         displayMessage('$name Community Created Successfully', false);
         Routemaster.of(context).pop();
+        state = false;
       },
     );
+  }
+
+  Stream<List<CommunityModel>> getUserCommunities() {
+    return communityRepo.getUserCommunities(ref.read(userProvider)!.uid);
   }
 }
 
@@ -47,3 +51,7 @@ final communityNotifierProvider =
     StateNotifierProvider<CommunityNotifier, bool>(
       (ref) => CommunityNotifier(ref.watch(communityRepoProvider), ref),
     );
+
+final userCommunitiesProvider = StreamProvider(
+  (ref) => ref.watch(communityNotifierProvider.notifier).getUserCommunities(),
+);

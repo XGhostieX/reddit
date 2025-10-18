@@ -64,22 +64,3 @@ class _RedditState extends ConsumerState<Reddit> {
         );
   }
 }
-
-// class Reddit extends StatelessWidget {
-//   const Reddit({super.key});
-//   @override
-//   Widget build(BuildContext context) {
-//     SystemChrome.setSystemUIOverlayStyle(
-//       const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-//     );
-//     return MaterialApp.router(
-//       title: 'Reddit',
-//       debugShowCheckedModeBanner: false,
-//       theme: AppTheme.darkTheme,
-//       routerDelegate: RoutemasterDelegate(
-//         routesBuilder: (context) => AppRouter.routes,
-//       ),
-//       routeInformationParser: const RoutemasterParser(),
-//     );
-//   }
-// }

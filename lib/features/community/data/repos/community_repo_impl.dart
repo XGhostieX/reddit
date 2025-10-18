@@ -31,6 +31,21 @@ class CommunityRepoImpl implements CommunityRepo {
       return Left(FirebaseFailure(e.toString()));
     }
   }
+
+  @override
+  Stream<List<CommunityModel>> getUserCommunities(String uid) {
+    return _communities.where('members', arrayContains: uid).snapshots().map((
+      event,
+    ) {
+      List<CommunityModel> communities = [];
+      for (var doc in event.docs) {
+        communities.add(
+          CommunityModel.fromMap(doc.data() as Map<String, dynamic>),
+        );
+      }
+      return communities;
+    });
+  }
 }
 
 final communityRepoProvider = Provider(
