@@ -18,8 +18,7 @@ class CommunityDrawer extends ConsumerWidget {
             ListTile(
               title: const Text('Create a Community'),
               leading: const Icon(Icons.add_rounded),
-              onTap: () =>
-                  Routemaster.of(context).push(AppRouter.kCreateCommunity),
+              onTap: () => Routemaster.of(context).push(AppRouter.kCreateCommunity),
             ),
             ref
                 .watch(userCommunitiesProvider)
@@ -29,24 +28,16 @@ class CommunityDrawer extends ConsumerWidget {
                       itemCount: communities.length,
                       itemBuilder: (context, index) => ListTile(
                         leading: CircleAvatar(
-                          backgroundImage: CachedNetworkImageProvider(
-                            communities[index].avatar,
-                          ),
+                          backgroundImage: CachedNetworkImageProvider(communities[index].avatar),
                         ),
                         title: Text('r/${communities[index].name}'),
-                        onTap: () => Routemaster.of(
-                          context,
-                        ).push('/r/${communities[index].name}'),
+                        onTap: () => Routemaster.of(context).push('/r/${communities[index].name}'),
                       ),
                     ),
                   ),
-                  error: (error, stackTrace) => const Center(
-                    child: Text(
-                      'Something Wrong Happend, Please Try Again Later',
-                    ),
-                  ),
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
+                  error: (error, stackTrace) =>
+                      const Center(child: Text('Something Wrong Happend, Please Try Again Later')),
+                  loading: () => const Center(child: CircularProgressIndicator()),
                 ),
           ],
         ),

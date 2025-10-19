@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
 import '../../../../auth/presentation/views_model/auth_provider.dart';
 import '../../views_model/community_provider.dart';
@@ -24,10 +25,7 @@ class CommunityViewBody extends ConsumerWidget {
                 flexibleSpace: Stack(
                   children: [
                     Positioned.fill(
-                      child: CachedNetworkImage(
-                        imageUrl: community.banner,
-                        fit: BoxFit.cover,
-                      ),
+                      child: CachedNetworkImage(imageUrl: community.banner, fit: BoxFit.cover),
                     ),
                   ],
                 ),
@@ -40,9 +38,7 @@ class CommunityViewBody extends ConsumerWidget {
                       alignment: Alignment.topLeft,
                       child: CircleAvatar(
                         radius: 40,
-                        backgroundImage: CachedNetworkImageProvider(
-                          community.avatar,
-                        ),
+                        backgroundImage: CachedNetworkImageProvider(community.avatar),
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -53,22 +49,16 @@ class CommunityViewBody extends ConsumerWidget {
                         children: [
                           Text(
                             'r/${community.name}',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           community.mods.contains(user!.uid)
                               ? OutlinedButton(
-                                  onPressed: () {},
+                                  onPressed: () => Routemaster.of(context).push('/mod-tools/$name'),
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadiusGeometry.circular(20),
+                                      borderRadius: BorderRadiusGeometry.circular(20),
                                     ),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 25,
-                                    ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 25),
                                   ),
                                   child: const Text('Mod Tools'),
                                 )
@@ -76,17 +66,12 @@ class CommunityViewBody extends ConsumerWidget {
                                   onPressed: () {},
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadiusGeometry.circular(20),
+                                      borderRadius: BorderRadiusGeometry.circular(20),
                                     ),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 25,
-                                    ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 25),
                                   ),
                                   child: Text(
-                                    community.members.contains(user.uid)
-                                        ? 'Joined'
-                                        : 'Join',
+                                    community.members.contains(user.uid) ? 'Joined' : 'Join',
                                   ),
                                 ),
                         ],
@@ -106,7 +91,8 @@ class CommunityViewBody extends ConsumerWidget {
             ],
             body: const Text('Posts'),
           ),
-          error: (error, stackTrace) => Center(child: Text(error.toString())),
+          error: (error, stackTrace) =>
+              const Center(child: Text('Something Wrong Happend, Please Try Again Later')),
           loading: () => const Center(child: CircularProgressIndicator()),
         );
   }

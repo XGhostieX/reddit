@@ -4,6 +4,8 @@ import 'package:routemaster/routemaster.dart';
 import '../../features/auth/presentation/views/auth_view.dart';
 import '../../features/community/presentation/views/community_view.dart';
 import '../../features/community/presentation/views/widgets/create_community.dart';
+import '../../features/community/presentation/views/widgets/edit_community.dart';
+import '../../features/community/presentation/views/widgets/mod_tools.dart';
 import '../../features/home/presentation/views/home_view.dart';
 
 abstract class AppRouter {
@@ -15,9 +17,12 @@ abstract class AppRouter {
     routes: {
       '/': (_) => const MaterialPage(child: HomeView()),
       kCreateCommunity: (_) => const MaterialPage(child: CreateCommunity()),
-      '/r/:name': (route) => MaterialPage(
-        child: CommunityView(name: route.pathParameters['name']!),
-      ),
+      '/r/:name': (route) =>
+          MaterialPage(child: CommunityView(name: route.pathParameters['name']!)),
+      '/mod-tools/:name': (route) =>
+          MaterialPage(child: ModTools(name: route.pathParameters['name']!)),
+      '/edit-community/:name': (route) =>
+          MaterialPage(child: EditCommunity(name: route.pathParameters['name']!)),
     },
   );
 }
