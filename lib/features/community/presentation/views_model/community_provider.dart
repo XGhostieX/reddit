@@ -54,6 +54,10 @@ class CommunityNotifier extends StateNotifier<bool> {
     return communityRepo.getCommunity(name);
   }
 
+  Stream<List<CommunityModel>> searchCommunity(String query) {
+    return communityRepo.searchCommunity(query);
+  }
+
   void editCommunity({
     required CommunityModel community,
     required File? banner,
@@ -101,6 +105,10 @@ final userCommunitiesProvider = StreamProvider(
   (ref) => ref.watch(communityNotifierProvider.notifier).getUserCommunities(),
 );
 
-final communityProvider = StreamProvider.family(
+final getCommunityProvider = StreamProvider.family(
   (ref, String name) => ref.watch(communityNotifierProvider.notifier).getCommunity(name),
+);
+
+final searchCommunityProvider = StreamProvider.family(
+  (ref, String query) => ref.watch(communityNotifierProvider.notifier).searchCommunity(query),
 );

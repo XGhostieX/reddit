@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../auth/presentation/views_model/auth_provider.dart';
+import '../delegates/search_community_delegate.dart';
 
 class HomeAppbar extends ConsumerWidget implements PreferredSizeWidget {
   const HomeAppbar({super.key});
@@ -18,12 +19,13 @@ class HomeAppbar extends ConsumerWidget implements PreferredSizeWidget {
         icon: const Icon(Icons.menu_rounded),
       ),
       actions: [
-        IconButton(onPressed: () {}, icon: const Icon(Icons.search_rounded)),
+        IconButton(
+          onPressed: () => showSearch(context: context, delegate: SearchCommunityDelegate()),
+          icon: const Icon(Icons.search_rounded),
+        ),
         IconButton(
           onPressed: () => Scaffold.of(context).openEndDrawer(),
-          icon: CircleAvatar(
-            backgroundImage: CachedNetworkImageProvider(user!.profile),
-          ),
+          icon: CircleAvatar(backgroundImage: CachedNetworkImageProvider(user!.profile)),
         ),
       ],
     );

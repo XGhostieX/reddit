@@ -14,7 +14,7 @@ class CommunityViewBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
     return ref
-        .watch(communityProvider(name))
+        .watch(getCommunityProvider(name))
         .when(
           data: (community) => NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) => [

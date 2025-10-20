@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 
 import '../../../../../core/utils/app_router.dart';
 import '../../../../community/presentation/views_model/community_provider.dart';
+import 'communities_listview.dart';
 
 class CommunityDrawer extends ConsumerWidget {
   const CommunityDrawer({super.key});
@@ -26,13 +26,8 @@ class CommunityDrawer extends ConsumerWidget {
                   data: (communities) => Expanded(
                     child: ListView.builder(
                       itemCount: communities.length,
-                      itemBuilder: (context, index) => ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: CachedNetworkImageProvider(communities[index].avatar),
-                        ),
-                        title: Text('r/${communities[index].name}'),
-                        onTap: () => Routemaster.of(context).push('/r/${communities[index].name}'),
-                      ),
+                      itemBuilder: (context, index) =>
+                          CommunitiesListview(communities: communities),
                     ),
                   ),
                   error: (error, stackTrace) =>

@@ -42,7 +42,7 @@ class _EditCommunityState extends ConsumerState<EditCommunity> {
     return Scaffold(
       appBar: AppBar(title: const Text('Edit Community')),
       body: ref
-          .watch(communityProvider(widget.name))
+          .watch(getCommunityProvider(widget.name))
           .when(
             data: (community) => Padding(
               padding: const EdgeInsets.all(10),
