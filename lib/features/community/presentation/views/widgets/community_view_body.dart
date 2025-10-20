@@ -63,7 +63,9 @@ class CommunityViewBody extends ConsumerWidget {
                                   child: const Text('Mod Tools'),
                                 )
                               : OutlinedButton(
-                                  onPressed: () {},
+                                  onPressed: () => ref
+                                      .watch(communityNotifierProvider.notifier)
+                                      .joinLeaveCommunity(community),
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadiusGeometry.circular(20),
@@ -71,7 +73,7 @@ class CommunityViewBody extends ConsumerWidget {
                                     padding: const EdgeInsets.symmetric(horizontal: 25),
                                   ),
                                   child: Text(
-                                    community.members.contains(user.uid) ? 'Joined' : 'Join',
+                                    community.members.contains(user.uid) ? 'Leave' : 'Join',
                                   ),
                                 ),
                         ],

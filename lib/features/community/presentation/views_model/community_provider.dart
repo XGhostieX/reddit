@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../../../../core/errors/failure.dart';
 import '../../../../core/models/community_model.dart';
 import '../../../../core/utils/assets.dart';
 import '../../../../core/utils/firebase_service.dart';
@@ -92,6 +94,23 @@ class CommunityNotifier extends StateNotifier<bool> {
     result.fold((failure) => displayMessage(failure.errMsg, true), (_) {
       displayMessage('Community Updated Successfully', false);
       Routemaster.of(context).pop();
+    });
+  }
+
+  void joinLeaveCommunity(CommunityModel community) async {
+    final user = ref.read(userProvider)!;
+    Either<Failure, void> result;
+    if (community.members.contains(user.uid)) {
+      result = await communityRepo.leaveCommunity(community.name, user.uid);
+    } else {
+      result = await communityRepo.joinCommunity(community.name, user.uid);
+    }
+    result.fold((failure) => displayMessage(failure.errMsg, true), (_) {
+      if (community.members.contains(user.uid)) {
+        displayMessage('/r${community.name} Community Left Successfully!', false);
+      } else {
+        displayMessage('/r${community.name} Community joined Successfully!', false);
+      }
     });
   }
 }

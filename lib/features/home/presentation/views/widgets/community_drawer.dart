@@ -23,13 +23,8 @@ class CommunityDrawer extends ConsumerWidget {
             ref
                 .watch(userCommunitiesProvider)
                 .when(
-                  data: (communities) => Expanded(
-                    child: ListView.builder(
-                      itemCount: communities.length,
-                      itemBuilder: (context, index) =>
-                          CommunitiesListview(communities: communities),
-                    ),
-                  ),
+                  data: (communities) =>
+                      Expanded(child: CommunitiesListview(communities: communities)),
                   error: (error, stackTrace) =>
                       const Center(child: Text('Something Wrong Happend, Please Try Again Later')),
                   loading: () => const Center(child: CircularProgressIndicator()),

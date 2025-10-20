@@ -79,6 +79,36 @@ class CommunityRepoImpl implements CommunityRepo {
           return communities;
         });
   }
+
+  @override
+  Future<Either<Failure, void>> joinCommunity(String name, String uid) async {
+    try {
+      return right(
+        _communities.doc(name).update({
+          'members': FieldValue.arrayUnion([uid]),
+        }),
+      );
+    } on FirebaseException catch (e) {
+      return left(FirebaseFailure.handleFirebaseException(e));
+    } catch (e) {
+      return left(FirebaseFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> leaveCommunity(String name, String uid) async {
+    try {
+      return right(
+        _communities.doc(name).update({
+          'members': FieldValue.arrayRemove([uid]),
+        }),
+      );
+    } on FirebaseException catch (e) {
+      return left(FirebaseFailure.handleFirebaseException(e));
+    } catch (e) {
+      return left(FirebaseFailure(e.toString()));
+    }
+  }
 }
 
 final communityRepoProvider = Provider(
