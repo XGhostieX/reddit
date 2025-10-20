@@ -12,13 +12,10 @@ class CommunityRepoImpl implements CommunityRepo {
 
   CommunityRepoImpl(this.firebaseFirestore);
 
-  CollectionReference get _communities =>
-      firebaseFirestore.collection('communities');
+  CollectionReference get _communities => firebaseFirestore.collection('communities');
 
   @override
-  Future<Either<Failure, void>> createCommunity(
-    CommunityModel community,
-  ) async {
+  Future<Either<Failure, void>> createCommunity(CommunityModel community) async {
     try {
       var communities = await _communities.doc(community.name).get();
       if (communities.exists) {
@@ -34,14 +31,10 @@ class CommunityRepoImpl implements CommunityRepo {
 
   @override
   Stream<List<CommunityModel>> getUserCommunities(String uid) {
-    return _communities.where('members', arrayContains: uid).snapshots().map((
-      event,
-    ) {
+    return _communities.where('members', arrayContains: uid).snapshots().map((event) {
       List<CommunityModel> communities = [];
       for (var doc in event.docs) {
-        communities.add(
-          CommunityModel.fromMap(doc.data() as Map<String, dynamic>),
-        );
+        communities.add(CommunityModel.fromMap(doc.data() as Map<String, dynamic>));
       }
       return communities;
     });
@@ -52,10 +45,18 @@ class CommunityRepoImpl implements CommunityRepo {
     return _communities
         .doc(Uri.decodeComponent(name))
         .snapshots()
-        .map(
-          (event) =>
-              CommunityModel.fromMap(event.data() as Map<String, dynamic>),
-        );
+        .map((event) => CommunityModel.fromMap(event.data() as Map<String, dynamic>));
+  }
+
+  @override
+  Future<Either<Failure, void>> editCommunity(CommunityModel community) async {
+    try {
+      return right(_communities.doc(community.name).update(community.toMap()));
+    } on FirebaseException catch (e) {
+      return left(FirebaseFailure.handleFirebaseException(e));
+    } catch (e) {
+      return left(FirebaseFailure(e.toString()));
+    }
   }
 }
 

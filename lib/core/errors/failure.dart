@@ -13,9 +13,7 @@ class AuthFailure extends Failure {
   factory AuthFailure.handleFirebaseAuthException(FirebaseAuthException e) {
     switch (e.code) {
       case 'account-exists-with-different-credential':
-        return AuthFailure(
-          'An account already exists with the same email address',
-        );
+        return AuthFailure('An account already exists with the same email address');
       case 'invalid-credential':
         return AuthFailure('The credential is invalid or expired');
       case 'operation-not-allowed':
@@ -38,14 +36,11 @@ class AuthFailure extends Failure {
   }
 
   factory AuthFailure.handleGoogleSignInException(GoogleSignInException e) {
-    if (e.description!.contains('CANCELLED') ||
-        e.description!.contains('cancelled')) {
+    if (e.description!.contains('CANCELLED') || e.description!.contains('cancelled')) {
       return AuthFailure('Sign in cancelled by user');
-    } else if (e.description!.contains('NETWORK') ||
-        e.description!.contains('network')) {
+    } else if (e.description!.contains('NETWORK') || e.description!.contains('network')) {
       return AuthFailure('Network error occurred');
-    } else if (e.description!.contains('INVALID') ||
-        e.description!.contains('invalid')) {
+    } else if (e.description!.contains('INVALID') || e.description!.contains('invalid')) {
       return AuthFailure('Invalid account selected');
     } else {
       return AuthFailure('Google Sign-In failed: ${e.description!}');
@@ -59,9 +54,7 @@ class FirebaseFailure extends Failure {
   factory FirebaseFailure.handleFirebaseException(FirebaseException e) {
     switch (e.code) {
       case 'permission-denied':
-        return FirebaseFailure(
-          'You don\'t have permission to access this data.',
-        );
+        return FirebaseFailure('You don\'t have permission to access this data.');
 
       case 'not-found':
         return FirebaseFailure('The requested document was not found.');
@@ -73,17 +66,13 @@ class FirebaseFailure extends Failure {
         return FirebaseFailure('Too many requests. Please try again later.');
 
       case 'failed-precondition':
-        return FirebaseFailure(
-          'Operation was rejected. Please check your data.',
-        );
+        return FirebaseFailure('Operation was rejected. Please check your data.');
 
       case 'aborted':
         return FirebaseFailure('The operation was aborted.');
 
       case 'out-of-range':
-        return FirebaseFailure(
-          'The operation was attempted past the valid range.',
-        );
+        return FirebaseFailure('The operation was attempted past the valid range.');
 
       case 'unimplemented':
         return FirebaseFailure('This operation is not implemented.');
@@ -92,9 +81,7 @@ class FirebaseFailure extends Failure {
         return FirebaseFailure('Internal server error. Please try again.');
 
       case 'unavailable':
-        return FirebaseFailure(
-          'Service is temporarily unavailable. Please try again.',
-        );
+        return FirebaseFailure('Service is temporarily unavailable. Please try again.');
 
       case 'data-loss':
         return FirebaseFailure('Unrecoverable data loss or corruption.');
@@ -107,6 +94,25 @@ class FirebaseFailure extends Failure {
 
       default:
         return FirebaseFailure('A database error occurred: ${e.message}');
+    }
+  }
+
+  factory FirebaseFailure.handleFirebaseStorageException(FirebaseException e) {
+    switch (e.code) {
+      case 'permission-denied':
+        return FirebaseFailure('Permission denied. Please check app permissions.');
+      case 'object-not-found':
+        return FirebaseFailure('File not found.');
+      case 'file-too-large':
+        return FirebaseFailure('Image is too large. Please choose a smaller image.');
+      case 'unauthenticated':
+        return FirebaseFailure('Authentication required. Please sign in.');
+      case 'canceled':
+        return FirebaseFailure('Upload was canceled.');
+      case 'deadline-exceeded':
+        return FirebaseFailure('Upload timeout. Please check your internet connection.');
+      default:
+        return FirebaseFailure('Upload failed: ${e.message}');
     }
   }
 }
