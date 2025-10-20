@@ -14,7 +14,7 @@ class ModTools extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.add_moderator_rounded),
             title: const Text('Add Moderators'),
-            onTap: () {},
+            onTap: () => Routemaster.of(context).push('/add-mods/$name'),
           ),
           ListTile(
             leading: const Icon(Icons.edit_note_rounded),

@@ -3,6 +3,7 @@ import 'package:routemaster/routemaster.dart';
 
 import '../../features/auth/presentation/views/auth_view.dart';
 import '../../features/community/presentation/views/community_view.dart';
+import '../../features/community/presentation/views/widgets/add_mods.dart';
 import '../../features/community/presentation/views/widgets/create_community.dart';
 import '../../features/community/presentation/views/widgets/edit_community.dart';
 import '../../features/community/presentation/views/widgets/mod_tools.dart';
@@ -23,6 +24,8 @@ abstract class AppRouter {
           MaterialPage(child: ModTools(name: route.pathParameters['name']!)),
       '/edit-community/:name': (route) =>
           MaterialPage(child: EditCommunity(name: route.pathParameters['name']!)),
+      '/add-mods/:name': (route) =>
+          MaterialPage(child: AddMods(name: route.pathParameters['name']!)),
     },
   );
 }

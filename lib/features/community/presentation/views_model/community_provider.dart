@@ -113,6 +113,14 @@ class CommunityNotifier extends StateNotifier<bool> {
       }
     });
   }
+
+  void addMods(String name, List<String> uids, BuildContext context) async {
+    final result = await communityRepo.addMods(name, uids);
+    result.fold(
+      (failure) => displayMessage(failure.errMsg, true),
+      (_) => Routemaster.of(context).pop(),
+    );
+  }
 }
 
 final communityNotifierProvider = StateNotifierProvider<CommunityNotifier, bool>(

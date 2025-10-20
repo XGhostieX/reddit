@@ -109,6 +109,17 @@ class CommunityRepoImpl implements CommunityRepo {
       return left(FirebaseFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> addMods(String name, List<String> uids) async {
+    try {
+      return right(_communities.doc(name).update({'mods': uids}));
+    } on FirebaseException catch (e) {
+      return left(FirebaseFailure.handleFirebaseException(e));
+    } catch (e) {
+      return left(FirebaseFailure(e.toString()));
+    }
+  }
 }
 
 final communityRepoProvider = Provider(
