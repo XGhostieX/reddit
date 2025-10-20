@@ -34,6 +34,14 @@ class AuthNotifier extends StateNotifier<bool> {
       },
     );
   }
+
+  void signOut() async {
+    final result = await authRepo.signOut();
+    result.fold(
+      (failure) => displayMessage(failure.errMsg, true),
+      (_) => displayMessage('Sign Out Successfully', false),
+    );
+  }
 }
 
 final authNotifierProvider = StateNotifierProvider(

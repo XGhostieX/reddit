@@ -24,9 +24,7 @@ class AuthRepoImpl extends AuthRepo {
     return _users
         .doc(uid)
         .snapshots()
-        .map(
-          (event) => UserModel.fromMap(event.data() as Map<String, dynamic>),
-        );
+        .map((event) => UserModel.fromMap(event.data() as Map<String, dynamic>));
   }
 
   @override
@@ -36,16 +34,12 @@ class AuthRepoImpl extends AuthRepo {
   Future<Either<Failure, UserModel>> signInWithGoogle() async {
     try {
       googleSignIn;
-      final GoogleSignInAccount googleUser = await googleSignIn
-          .initialize()
-          .then((value) => googleSignIn.authenticate());
+      final GoogleSignInAccount googleUser = await googleSignIn.initialize().then(
+        (value) => googleSignIn.authenticate(),
+      );
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken,
-      );
-      UserCredential userCredential = await firebaseAuth.signInWithCredential(
-        credential,
-      );
+      final credential = GoogleAuthProvider.credential(idToken: googleAuth.idToken);
+      UserCredential userCredential = await firebaseAuth.signInWithCredential(credential);
       UserModel user;
       if (userCredential.additionalUserInfo!.isNewUser) {
         user = UserModel(
@@ -62,6 +56,20 @@ class AuthRepoImpl extends AuthRepo {
         user = await getUser(userCredential.user!.uid).first;
       }
       return right(user);
+    } on FirebaseAuthException catch (e) {
+      return left(AuthFailure.handleFirebaseAuthException(e));
+    } on GoogleSignInException catch (e) {
+      return left(AuthFailure.handleGoogleSignInException(e));
+    } catch (e) {
+      return Left(AuthFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> signOut() async {
+    try {
+      await googleSignIn.signOut();
+      return right(await firebaseAuth.signOut());
     } on FirebaseAuthException catch (e) {
       return left(AuthFailure.handleFirebaseAuthException(e));
     } on GoogleSignInException catch (e) {

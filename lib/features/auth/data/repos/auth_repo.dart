@@ -8,4 +8,5 @@ abstract class AuthRepo {
   Future<Either<Failure, UserModel>> signInWithGoogle();
   Stream<UserModel> getUser(String uid);
   Stream<User?> get authStateChange;
+  Future<Either<Failure, void>> signOut();
 }
