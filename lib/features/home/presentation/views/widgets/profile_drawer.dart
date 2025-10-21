@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ThemeMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_theme.dart';
 import '../../../../auth/presentation/views_model/auth_provider.dart';
 
 class ProfileDrawer extends ConsumerWidget {
@@ -32,7 +33,10 @@ class ProfileDrawer extends ConsumerWidget {
             ListTile(
               leading: const Icon(Icons.dark_mode_rounded),
               title: const Text('Dark Theme'),
-              trailing: Switch.adaptive(value: true, onChanged: (value) {}),
+              trailing: Switch.adaptive(
+                value: ref.watch(themeNotifierProvider.notifier).mode == ThemeMode.dark,
+                onChanged: (value) => ref.watch(themeNotifierProvider.notifier).toggleTheme(),
+              ),
             ),
             ListTile(
               leading: Icon(Icons.logout_rounded, color: AppColors.redColor),

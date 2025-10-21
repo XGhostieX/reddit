@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_theme.dart';
 import '../../../../../core/utils/assets.dart';
 import '../../../../../core/utils/functions/pick_image.dart';
 import '../../../../../core/widgets/rounded_btn.dart';
@@ -53,6 +54,8 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(profileNotifierProvider);
+    final theme = ref.watch(themeNotifierProvider);
+
     return Scaffold(
       appBar: AppBar(title: const Text('Edit Profile')),
       body: ref
@@ -68,11 +71,11 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                       InkWell(
                         onTap: () => selectImage(true),
                         child: DottedBorder(
-                          options: const RoundedRectDottedBorderOptions(
-                            radius: Radius.circular(10),
+                          options: RoundedRectDottedBorderOptions(
+                            radius: const Radius.circular(10),
                             dashPattern: [10, 4],
                             strokeCap: StrokeCap.round,
-                            color: AppColors.whiteColor,
+                            color: theme.textTheme.bodyLarge!.color!,
                           ),
                           child: Container(
                             width: double.infinity,

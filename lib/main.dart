@@ -27,10 +27,7 @@ class _RedditState extends ConsumerState<Reddit> {
   UserModel? user;
 
   void getData(User data) async {
-    user = await ref
-        .watch(authNotifierProvider.notifier)
-        .getUser(data.uid)
-        .first;
+    user = await ref.watch(authNotifierProvider.notifier).getUser(data.uid).first;
     ref.read(userProvider.notifier).update((state) => user);
     setState(() {});
   }
@@ -43,7 +40,7 @@ class _RedditState extends ConsumerState<Reddit> {
           data: (data) => MaterialApp.router(
             title: 'Reddit',
             debugShowCheckedModeBanner: false,
-            theme: AppTheme.darkTheme,
+            theme: ref.watch(themeNotifierProvider),
             routerDelegate: RoutemasterDelegate(
               routesBuilder: (context) {
                 if (data != null) {
@@ -57,9 +54,8 @@ class _RedditState extends ConsumerState<Reddit> {
             ),
             routeInformationParser: const RoutemasterParser(),
           ),
-          error: (error, stackTrace) => const Center(
-            child: Text('Something Wrong Happend, Please Try Again Later'),
-          ),
+          error: (error, stackTrace) =>
+              const Center(child: Text('Something Wrong Happend, Please Try Again Later')),
           loading: () => const Center(child: CircularProgressIndicator()),
         );
   }
