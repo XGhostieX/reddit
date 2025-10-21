@@ -8,6 +8,8 @@ import '../../features/community/presentation/views/widgets/create_community.dar
 import '../../features/community/presentation/views/widgets/edit_community.dart';
 import '../../features/community/presentation/views/widgets/mod_tools.dart';
 import '../../features/home/presentation/views/home_view.dart';
+import '../../features/profile/presentation/views/profile_view.dart';
+import '../../features/profile/presentation/views/widgets/edit_profile.dart';
 
 abstract class AppRouter {
   static const kCreateCommunity = '/create-community';
@@ -26,6 +28,9 @@ abstract class AppRouter {
           MaterialPage(child: EditCommunity(name: route.pathParameters['name']!)),
       '/add-mods/:name': (route) =>
           MaterialPage(child: AddMods(name: route.pathParameters['name']!)),
+      '/u/:uid': (route) => MaterialPage(child: ProfileView(uid: route.pathParameters['uid']!)),
+      '/edit-profile/:uid': (route) =>
+          MaterialPage(child: EditProfile(uid: route.pathParameters['uid']!)),
     },
   );
 }

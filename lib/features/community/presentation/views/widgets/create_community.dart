@@ -26,10 +26,7 @@ class _CreateCommunityState extends ConsumerState<CreateCommunity> {
   Widget build(BuildContext context) {
     final isLoading = ref.watch(communityNotifierProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create a Community'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Create a Community'), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
@@ -40,10 +37,13 @@ class _CreateCommunityState extends ConsumerState<CreateCommunity> {
             TextField(
               controller: communityNameController,
               maxLength: 21,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'r/Community_name',
-                filled: true,
-                border: InputBorder.none,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.blueColor),
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
             RoundedBtn(
@@ -53,17 +53,11 @@ class _CreateCommunityState extends ConsumerState<CreateCommunity> {
                   : () {
                       if (communityNameController.text.trim().isEmpty ||
                           communityNameController.text.trim() == '') {
-                        return displayMessage(
-                          'Please Enter a Valid Community Name',
-                          true,
-                        );
+                        return displayMessage('Please Enter a Valid Community Name', true);
                       }
                       ref
                           .read(communityNotifierProvider.notifier)
-                          .createCommunity(
-                            communityNameController.text.trim(),
-                            context,
-                          );
+                          .createCommunity(communityNameController.text.trim(), context);
                     },
               bgColor: AppColors.blueColor,
               icon: isLoading ? const CircularProgressIndicator() : null,
