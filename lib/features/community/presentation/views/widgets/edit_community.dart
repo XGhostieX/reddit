@@ -1,14 +1,13 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/theme/app_theme.dart';
 import '../../../../../core/utils/assets.dart';
 import '../../../../../core/utils/functions/pick_image.dart';
+import '../../../../../core/widgets/dotted_container.dart';
 import '../../../../../core/widgets/rounded_btn.dart';
 import '../../views_model/community_provider.dart';
 
@@ -40,7 +39,6 @@ class _EditCommunityState extends ConsumerState<EditCommunity> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(communityNotifierProvider);
-    final theme = ref.watch(themeNotifierProvider);
     return Scaffold(
       appBar: AppBar(title: const Text('Edit Community')),
       body: ref
@@ -53,26 +51,13 @@ class _EditCommunityState extends ConsumerState<EditCommunity> {
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      InkWell(
-                        onTap: () => selectImage(true),
-                        child: DottedBorder(
-                          options: RoundedRectDottedBorderOptions(
-                            radius: const Radius.circular(10),
-                            dashPattern: [10, 4],
-                            strokeCap: StrokeCap.round,
-                            color: theme.textTheme.bodyLarge!.color!,
-                          ),
-                          child: Container(
-                            width: double.infinity,
-                            height: 150,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                            child: banner != null
-                                ? Image.file(banner!)
-                                : community.banner.isEmpty || community.banner == Assets.banner
-                                ? const Icon(Icons.camera_alt_outlined, size: 40)
-                                : CachedNetworkImage(imageUrl: community.banner),
-                          ),
-                        ),
+                      DottedContainer(
+                        () => selectImage(true),
+                        banner != null
+                            ? Image.file(banner!)
+                            : community.banner.isEmpty || community.banner == Assets.banner
+                            ? const Icon(Icons.camera_alt_outlined, size: 40)
+                            : CachedNetworkImage(imageUrl: community.banner),
                       ),
                       Positioned(
                         bottom: -30,

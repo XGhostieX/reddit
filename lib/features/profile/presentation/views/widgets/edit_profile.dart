@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/theme/app_theme.dart';
 import '../../../../../core/utils/assets.dart';
 import '../../../../../core/utils/functions/pick_image.dart';
+import '../../../../../core/widgets/custom_text_field.dart';
+import '../../../../../core/widgets/dotted_container.dart';
 import '../../../../../core/widgets/rounded_btn.dart';
 import '../../../../auth/presentation/views_model/auth_provider.dart';
 import '../../views_model/profile_provider.dart';
@@ -54,7 +54,6 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(profileNotifierProvider);
-    final theme = ref.watch(themeNotifierProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Edit Profile')),
@@ -68,26 +67,13 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      InkWell(
-                        onTap: () => selectImage(true),
-                        child: DottedBorder(
-                          options: RoundedRectDottedBorderOptions(
-                            radius: const Radius.circular(10),
-                            dashPattern: [10, 4],
-                            strokeCap: StrokeCap.round,
-                            color: theme.textTheme.bodyLarge!.color!,
-                          ),
-                          child: Container(
-                            width: double.infinity,
-                            height: 150,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                            child: banner != null
-                                ? Image.file(banner!)
-                                : user.banner.isEmpty || user.banner == Assets.banner
-                                ? const Icon(Icons.camera_alt_outlined, size: 40)
-                                : CachedNetworkImage(imageUrl: user.banner),
-                          ),
-                        ),
+                      DottedContainer(
+                        () => selectImage(true),
+                        banner != null
+                            ? Image.file(banner!)
+                            : user.banner.isEmpty || user.banner == Assets.banner
+                            ? const Icon(Icons.camera_alt_outlined, size: 40)
+                            : CachedNetworkImage(imageUrl: user.banner),
                       ),
                       Positioned(
                         bottom: -30,
@@ -105,18 +91,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                     ],
                   ),
                   const SizedBox(height: 40),
-                  TextField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      hintText: 'Name',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.blueColor),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-
+                  CustomTextField(controller: nameController, hint: 'Name'),
                   const SizedBox(height: 10),
                   RoundedBtn(
                     label: isLoading ? '' : 'Save',

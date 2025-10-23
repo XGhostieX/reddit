@@ -37,7 +37,7 @@ class ThemeNotifier extends StateNotifier<ThemeData> {
     ),
     drawerTheme: const DrawerThemeData(backgroundColor: AppColors.drawerColor),
     primaryColor: AppColors.redColor,
-    // backgroundColor: AppColors.drawerColor,
+    colorScheme: const ColorScheme.dark(surface: AppColors.drawerColor),
   );
 
   void getTheme() async {

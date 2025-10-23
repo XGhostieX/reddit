@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/utils/functions/display_message.dart';
+import '../../../../../core/widgets/custom_text_field.dart';
 import '../../../../../core/widgets/rounded_btn.dart';
 import '../../views_model/community_provider.dart';
 
@@ -34,17 +35,10 @@ class _CreateCommunityState extends ConsumerState<CreateCommunity> {
           children: [
             const Text('Community Name'),
             const SizedBox(height: 10),
-            TextField(
+            CustomTextField(
               controller: communityNameController,
+              hint: 'r/Community_name',
               maxLength: 21,
-              decoration: InputDecoration(
-                hintText: 'r/Community_name',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.blueColor),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
             ),
             RoundedBtn(
               label: isLoading ? '' : 'Create Community',
