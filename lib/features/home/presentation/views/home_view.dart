@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../feed/presentation/views/feed_view.dart';
-import '../../../post/presentation/views/post_view.dart';
+import '../../../post/presentation/views/widgets/add_post.dart';
 import 'widgets/community_drawer.dart';
 import 'widgets/home_appbar.dart';
 import 'widgets/profile_drawer.dart';
@@ -19,7 +19,7 @@ class HomeView extends ConsumerStatefulWidget {
 
 class _HomeViewState extends ConsumerState<HomeView> {
   int _page = 0;
-  final tabsWidgets = const [FeedView(), PostView()];
+  final tabsWidgets = const [FeedView(), AddPost()];
   @override
   Widget build(BuildContext context) {
     final theme = ref.watch(themeNotifierProvider);
