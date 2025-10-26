@@ -1,0 +1,144 @@
+import 'package:any_link_preview/any_link_preview.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:readmore/readmore.dart';
+
+import '../../features/auth/presentation/views_model/auth_provider.dart';
+import '../models/post_model.dart';
+import '../theme/app_colors.dart';
+import '../theme/app_theme.dart';
+import '../utils/assets.dart';
+
+class PostCard extends ConsumerWidget {
+  final PostModel post;
+  const PostCard({super.key, required this.post});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider)!;
+    final theme = ref.watch(themeNotifierProvider);
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(color: theme.drawerTheme.backgroundColor),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: CachedNetworkImageProvider(post.communityAvatar),
+                radius: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'r/${post.communityName}',
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    Text('u/${post.username}', style: const TextStyle(fontSize: 12)),
+                  ],
+                ),
+              ),
+              const Spacer(),
+              if (post.uid == user.uid)
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.delete_rounded, color: AppColors.redColor),
+                ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Text(
+              post.title,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          if (post.description != null)
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: ReadMoreText(
+                post.description!,
+                trimMode: TrimMode.Line,
+                trimLines: 2,
+                colorClickableText: AppColors.redColor,
+                trimCollapsedText: 'Show more',
+                trimExpandedText: 'Show less',
+                style: const TextStyle(color: Colors.grey),
+              ),
+            ),
+          if (post.image!.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: CachedNetworkImage(
+                  imageUrl: post.image!,
+                  width: double.infinity,
+                  height: MediaQuery.sizeOf(context).height * 0.35,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          if (post.link != null)
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              width: double.infinity,
+              height: MediaQuery.sizeOf(context).height * 0.35,
+              child: AnyLinkPreview(
+                link: post.link!,
+                displayDirection: UIDirection.uiDirectionHorizontal,
+              ),
+            ),
+          Row(
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: Image.asset(
+                      height: 20,
+                      width: 20,
+                      Assets.upvote,
+                      color: post.upvotes.contains(user.uid)
+                          ? AppColors.redColor
+                          : theme.iconTheme.color,
+                    ),
+                  ),
+                  Text(
+                    '${post.upvotes.length - post.downvotes.length == 0 ? 'Vote' : post.upvotes.length - post.downvotes.length}',
+                    style: const TextStyle(fontSize: 17),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Image.asset(
+                      Assets.downvote,
+                      height: 20,
+                      width: 20,
+                      color: post.upvotes.contains(user.uid)
+                          ? AppColors.redColor
+                          : theme.iconTheme.color,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.comment_rounded)),
+                  Text(
+                    '${post.commentCount == 0 ? 'Comment' : post.commentCount}',
+                    style: const TextStyle(fontSize: 17),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}

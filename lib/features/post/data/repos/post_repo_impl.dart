@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/errors/failure.dart';
+import '../../../../core/models/community_model.dart';
 import '../../../../core/models/post_model.dart';
 import '../../../../core/utils/service_locator.dart';
 import 'post_repo.dart';
@@ -23,6 +24,18 @@ class PostRepoImpl implements PostRepo {
     } catch (e) {
       return left(FirebaseFailure(e.toString()));
     }
+  }
+
+  @override
+  Stream<List<PostModel>> getPosts(List<CommunityModel> communities) {
+    return _posts
+        .where('communityName', whereIn: communities.map((e) => e.name).toList())
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (event) =>
+              event.docs.map((e) => PostModel.fromMap(e.data() as Map<String, dynamic>)).toList(),
+        );
   }
 }
 

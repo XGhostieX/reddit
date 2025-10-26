@@ -73,7 +73,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                             ? Image.file(banner!)
                             : user.banner.isEmpty || user.banner == Assets.banner
                             ? const Icon(Icons.camera_alt_outlined, size: 40)
-                            : CachedNetworkImage(imageUrl: user.banner),
+                            : CachedNetworkImage(imageUrl: user.banner, fit: BoxFit.cover),
                       ),
                       Positioned(
                         bottom: -30,

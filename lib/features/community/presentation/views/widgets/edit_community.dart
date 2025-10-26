@@ -57,7 +57,7 @@ class _EditCommunityState extends ConsumerState<EditCommunity> {
                             ? Image.file(banner!)
                             : community.banner.isEmpty || community.banner == Assets.banner
                             ? const Icon(Icons.camera_alt_outlined, size: 40)
-                            : CachedNetworkImage(imageUrl: community.banner),
+                            : CachedNetworkImage(imageUrl: community.banner, fit: BoxFit.cover),
                       ),
                       Positioned(
                         bottom: -30,

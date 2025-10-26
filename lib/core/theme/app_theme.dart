@@ -15,7 +15,9 @@ class ThemeNotifier extends StateNotifier<ThemeData> {
     getTheme();
   }
 
-  static final ThemeData lightTheme = ThemeData.light().copyWith(
+  static final ThemeData lightTheme = ThemeData(
+    brightness: Brightness.light,
+    fontFamily: 'Reddit Sans',
     scaffoldBackgroundColor: AppColors.whiteColor,
     cardColor: AppColors.greyColor,
     appBarTheme: const AppBarTheme(
@@ -28,7 +30,9 @@ class ThemeNotifier extends StateNotifier<ThemeData> {
     // backgroundColor: AppColors.whiteColor,
   );
 
-  static final ThemeData darkTheme = ThemeData.dark().copyWith(
+  static final ThemeData darkTheme = ThemeData(
+    brightness: Brightness.dark,
+    fontFamily: 'Reddit Sans',
     scaffoldBackgroundColor: AppColors.blackColor,
     cardColor: AppColors.greyColor,
     appBarTheme: const AppBarTheme(

@@ -1,8 +1,10 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/errors/failure.dart';
+import '../../../../core/models/community_model.dart';
 import '../../../../core/models/post_model.dart';
 
 abstract class PostRepo {
   Future<Either<Failure, void>> addPost(PostModel post);
+  Stream<List<PostModel>> getPosts(List<CommunityModel> communities);
 }

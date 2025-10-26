@@ -88,8 +88,20 @@ class PostNotifier extends StateNotifier<bool> {
       });
     }
   }
+
+  Stream<List<PostModel>> getPosts(List<CommunityModel> communities) {
+    if (communities.isEmpty) {
+      return Stream.value([]);
+    }
+    return postRepo.getPosts(communities);
+  }
 }
 
 final postNotifierProvider = StateNotifierProvider<PostNotifier, bool>(
   (ref) => PostNotifier(ref.read(firebaseServiceProvider), ref.read(postRepoProvider), ref),
+);
+
+final getPostsProvider = StreamProvider.family(
+  (ref, List<CommunityModel> communities) =>
+      ref.watch(postNotifierProvider.notifier).getPosts(communities),
 );

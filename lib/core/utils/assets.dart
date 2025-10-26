@@ -10,6 +10,8 @@ class Assets {
   static const rocket = 'assets/images/rocket.png';
   static const thankYou = 'assets/images/thankyou.png';
   static const til = 'assets/images/til.png';
+  static const upvote = 'assets/images/upvote.png';
+  static const downvote = 'assets/images/downvote.png';
   static const avatar =
       'https://external-preview.redd.it/5kh5OreeLd85QsqYO1Xz_4XSLYwZntfjqou-8fyBFoE.png?auto=webp&s=dbdabd04c399ce9c761ff899f5d38656d1de87c2';
   static const banner =
