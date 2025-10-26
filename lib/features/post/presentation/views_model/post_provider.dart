@@ -95,6 +95,14 @@ class PostNotifier extends StateNotifier<bool> {
     }
     return postRepo.getPosts(communities);
   }
+
+  void deletePost(PostModel post) async {
+    final result = await postRepo.deletePost(post);
+    result.fold(
+      (failure) => displayMessage(failure.errMsg, true),
+      (_) => displayMessage('Post Deleted Successfully!', false),
+    );
+  }
 }
 
 final postNotifierProvider = StateNotifierProvider<PostNotifier, bool>(

@@ -37,6 +37,17 @@ class PostRepoImpl implements PostRepo {
               event.docs.map((e) => PostModel.fromMap(e.data() as Map<String, dynamic>)).toList(),
         );
   }
+
+  @override
+  Future<Either<Failure, void>> deletePost(PostModel post) async {
+    try {
+      return right(_posts.doc(post.id).delete());
+    } on FirebaseException catch (e) {
+      return left(FirebaseFailure.handleFirebaseException(e));
+    } catch (e) {
+      return left(FirebaseFailure(e.toString()));
+    }
+  }
 }
 
 final postRepoProvider = Provider((ref) => PostRepoImpl(ref.read(firebaseFirestoreProvider)));

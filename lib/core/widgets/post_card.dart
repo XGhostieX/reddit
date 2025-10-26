@@ -3,8 +3,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:readmore/readmore.dart';
+import 'package:routemaster/routemaster.dart';
 
 import '../../features/auth/presentation/views_model/auth_provider.dart';
+import '../../features/post/presentation/views_model/post_provider.dart';
 import '../models/post_model.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
@@ -46,7 +48,26 @@ class PostCard extends ConsumerWidget {
               const Spacer(),
               if (post.uid == user.uid)
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog.adaptive(
+                      title: const Text('Delete Post'),
+                      content: Text('Are you sure you want to delete "${post.title}" ?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Routemaster.of(context).pop(),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            ref.read(postNotifierProvider.notifier).deletePost(post);
+                            Routemaster.of(context).pop();
+                          },
+                          child: Text('Delete', style: TextStyle(color: AppColors.redColor)),
+                        ),
+                      ],
+                    ),
+                  ),
                   icon: Icon(Icons.delete_rounded, color: AppColors.redColor),
                 ),
             ],
@@ -88,7 +109,7 @@ class PostCard extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 10),
               width: double.infinity,
-              height: MediaQuery.sizeOf(context).height * 0.35,
+              height: MediaQuery.sizeOf(context).height * 0.25,
               child: AnyLinkPreview(
                 link: post.link!,
                 displayDirection: UIDirection.uiDirectionHorizontal,
