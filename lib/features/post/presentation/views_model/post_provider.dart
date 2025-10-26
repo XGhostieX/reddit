@@ -103,6 +103,16 @@ class PostNotifier extends StateNotifier<bool> {
       (_) => displayMessage('Post Deleted Successfully!', false),
     );
   }
+
+  void upvotePost(PostModel post, String uid) async {
+    final result = await postRepo.upvotePost(post, uid);
+    result.fold((failure) => displayMessage(failure.errMsg, true), (_) {});
+  }
+
+  void downvotePost(PostModel post, String uid) async {
+    final result = await postRepo.downvotePost(post, uid);
+    result.fold((failure) => displayMessage(failure.errMsg, true), (_) {});
+  }
 }
 
 final postNotifierProvider = StateNotifierProvider<PostNotifier, bool>(

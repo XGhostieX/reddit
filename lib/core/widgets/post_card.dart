@@ -120,7 +120,8 @@ class PostCard extends ConsumerWidget {
               Row(
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () =>
+                        ref.read(postNotifierProvider.notifier).upvotePost(post, user.uid),
                     icon: Image.asset(
                       height: 20,
                       width: 20,
@@ -135,13 +136,14 @@ class PostCard extends ConsumerWidget {
                     style: const TextStyle(fontSize: 17),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () =>
+                        ref.read(postNotifierProvider.notifier).downvotePost(post, user.uid),
                     icon: Image.asset(
                       Assets.downvote,
                       height: 20,
                       width: 20,
-                      color: post.upvotes.contains(user.uid)
-                          ? AppColors.redColor
+                      color: post.downvotes.contains(user.uid)
+                          ? AppColors.blueColor
                           : theme.iconTheme.color,
                     ),
                   ),

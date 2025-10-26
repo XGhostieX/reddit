@@ -48,6 +48,56 @@ class PostRepoImpl implements PostRepo {
       return left(FirebaseFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> upvotePost(PostModel post, String uid) async {
+    if (post.downvotes.contains(uid)) {
+      _posts.doc(post.id).update({
+        'downvotes': FieldValue.arrayRemove([uid]),
+      });
+    }
+    if (post.upvotes.contains(uid)) {
+      return right(
+        _posts.doc(post.id).update({
+          'upvotes': FieldValue.arrayRemove([uid]),
+        }),
+      );
+    } else {
+      return right(
+        _posts.doc(post.id).update({
+          'upvotes': FieldValue.arrayUnion([uid]),
+        }),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> downvotePost(PostModel post, String uid) async {
+    try {
+      if (post.upvotes.contains(uid)) {
+        _posts.doc(post.id).update({
+          'upvotes': FieldValue.arrayRemove([uid]),
+        });
+      }
+      if (post.downvotes.contains(uid)) {
+        return right(
+          _posts.doc(post.id).update({
+            'downvotes': FieldValue.arrayRemove([uid]),
+          }),
+        );
+      } else {
+        return right(
+          _posts.doc(post.id).update({
+            'downvotes': FieldValue.arrayUnion([uid]),
+          }),
+        );
+      }
+    } on FirebaseException catch (e) {
+      return left(FirebaseFailure.handleFirebaseException(e));
+    } catch (e) {
+      return left(FirebaseFailure(e.toString()));
+    }
+  }
 }
 
 final postRepoProvider = Provider((ref) => PostRepoImpl(ref.read(firebaseFirestoreProvider)));
