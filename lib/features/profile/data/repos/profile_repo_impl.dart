@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/errors/failure.dart';
+import '../../../../core/models/post_model.dart';
 import '../../../../core/models/user_model.dart';
 import '../../../../core/utils/service_locator.dart';
 import 'profile_repo.dart';
@@ -13,6 +14,7 @@ class ProfileRepoImpl implements ProfileRepo {
   ProfileRepoImpl(this.firebaseFirestore);
 
   CollectionReference get _users => firebaseFirestore.collection('users');
+  CollectionReference get _posts => firebaseFirestore.collection('posts');
 
   @override
   Future<Either<Failure, void>> editProfile(UserModel user) async {
@@ -23,6 +25,18 @@ class ProfileRepoImpl implements ProfileRepo {
     } catch (e) {
       return left(FirebaseFailure(e.toString()));
     }
+  }
+
+  @override
+  Stream<List<PostModel>> getUserPosts(String uid) {
+    return _posts
+        .where('uid', isEqualTo: uid)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (event) =>
+              event.docs.map((e) => PostModel.fromMap(e.data() as Map<String, dynamic>)).toList(),
+        );
   }
 }
 

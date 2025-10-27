@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../../../../../core/widgets/feed_skeleton.dart';
+import '../../../../../core/widgets/post_card.dart';
 import '../../../../auth/presentation/views_model/auth_provider.dart';
 import '../../views_model/community_provider.dart';
 
@@ -91,7 +93,17 @@ class CommunityViewBody extends ConsumerWidget {
                 ),
               ),
             ],
-            body: const Text('Posts'),
+            body: ref
+                .watch(getCommunityPostsProvider(community.name))
+                .when(
+                  data: (posts) => ListView.builder(
+                    itemCount: posts.length,
+                    itemBuilder: (context, index) => PostCard(post: posts[index]),
+                  ),
+                  error: (error, stackTrace) =>
+                      const Center(child: Text('Something Wrong Happend, Please Try Again Later')),
+                  loading: () => const FeedSkeleton(),
+                ),
           ),
           error: (error, stackTrace) =>
               const Center(child: Text('Something Wrong Happend, Please Try Again Later')),

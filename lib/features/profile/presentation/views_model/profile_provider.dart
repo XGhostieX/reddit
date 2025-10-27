@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../../../../core/models/post_model.dart';
 import '../../../../core/models/user_model.dart';
 import '../../../../core/utils/firebase_service.dart';
 import '../../../../core/utils/functions/display_message.dart';
@@ -58,8 +59,14 @@ class ProfileNotifier extends StateNotifier<bool> {
       Routemaster.of(context).pop();
     });
   }
+
+  Stream<List<PostModel>> getUserPosts(String uid) => profileRepo.getUserPosts(uid);
 }
 
 final profileNotifierProvider = StateNotifierProvider<ProfileNotifier, bool>(
   (ref) => ProfileNotifier(ref.read(firebaseServiceProvider), ref.read(profileRepoProvider), ref),
+);
+
+final getUserPostsProvider = StreamProvider.family(
+  (ref, String uid) => ref.watch(profileNotifierProvider.notifier).getUserPosts(uid),
 );

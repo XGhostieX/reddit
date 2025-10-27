@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/errors/failure.dart';
 import '../../../../core/models/community_model.dart';
+import '../../../../core/models/post_model.dart';
 import '../../../../core/utils/service_locator.dart';
 import 'community_repo.dart';
 
@@ -13,6 +14,7 @@ class CommunityRepoImpl implements CommunityRepo {
   CommunityRepoImpl(this.firebaseFirestore);
 
   CollectionReference get _communities => firebaseFirestore.collection('communities');
+  CollectionReference get _posts => firebaseFirestore.collection('posts');
 
   @override
   Future<Either<Failure, void>> createCommunity(CommunityModel community) async {
@@ -119,6 +121,18 @@ class CommunityRepoImpl implements CommunityRepo {
     } catch (e) {
       return left(FirebaseFailure(e.toString()));
     }
+  }
+
+  @override
+  Stream<List<PostModel>> getCommunityPosts(String name) {
+    return _posts
+        .where('communityName', isEqualTo: name)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (event) =>
+              event.docs.map((e) => PostModel.fromMap(e.data() as Map<String, dynamic>)).toList(),
+        );
   }
 }
 

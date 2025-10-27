@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import '../../../../core/errors/failure.dart';
 import '../../../../core/models/community_model.dart';
+import '../../../../core/models/post_model.dart';
 
 abstract class CommunityRepo {
   Future<Either<Failure, void>> createCommunity(CommunityModel community);
@@ -12,4 +13,5 @@ abstract class CommunityRepo {
   Stream<List<CommunityModel>> getUserCommunities(String uid);
   Stream<List<CommunityModel>> searchCommunity(String query);
   Stream<CommunityModel> getCommunity(String name);
+  Stream<List<PostModel>> getCommunityPosts(String name);
 }

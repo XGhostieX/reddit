@@ -8,6 +8,7 @@ import 'package:routemaster/routemaster.dart';
 
 import '../../../../core/errors/failure.dart';
 import '../../../../core/models/community_model.dart';
+import '../../../../core/models/post_model.dart';
 import '../../../../core/utils/assets.dart';
 import '../../../../core/utils/firebase_service.dart';
 import '../../../../core/utils/functions/display_message.dart';
@@ -121,6 +122,8 @@ class CommunityNotifier extends StateNotifier<bool> {
       (_) => Routemaster.of(context).pop(),
     );
   }
+
+  Stream<List<PostModel>> getCommunityPosts(String name) => communityRepo.getCommunityPosts(name);
 }
 
 final communityNotifierProvider = StateNotifierProvider<CommunityNotifier, bool>(
@@ -138,4 +141,8 @@ final getCommunityProvider = StreamProvider.family(
 
 final searchCommunityProvider = StreamProvider.family(
   (ref, String query) => ref.watch(communityNotifierProvider.notifier).searchCommunity(query),
+);
+
+final getCommunityPostsProvider = StreamProvider.family(
+  (ref, String name) => ref.watch(communityNotifierProvider.notifier).getCommunityPosts(name),
 );

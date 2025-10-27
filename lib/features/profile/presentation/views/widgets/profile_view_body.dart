@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../../../../../core/widgets/feed_skeleton.dart';
+import '../../../../../core/widgets/post_card.dart';
 import '../../../../auth/presentation/views_model/auth_provider.dart';
+import '../../views_model/profile_provider.dart';
 
 class ProfileViewBody extends ConsumerWidget {
   final String uid;
@@ -73,7 +76,17 @@ class ProfileViewBody extends ConsumerWidget {
                 ),
               ),
             ],
-            body: const Text('Posts'),
+            body: ref
+                .watch(getUserPostsProvider(user.uid))
+                .when(
+                  data: (posts) => ListView.builder(
+                    itemCount: posts.length,
+                    itemBuilder: (context, index) => PostCard(post: posts[index]),
+                  ),
+                  error: (error, stackTrace) =>
+                      const Center(child: Text('Something Wrong Happend, Please Try Again Later')),
+                  loading: () => const FeedSkeleton(),
+                ),
           ),
           error: (error, stackTrace) =>
               const Center(child: Text('Something Wrong Happend, Please Try Again Later')),

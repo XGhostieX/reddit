@@ -6,6 +6,7 @@ import 'package:readmore/readmore.dart';
 import 'package:routemaster/routemaster.dart';
 
 import '../../features/auth/presentation/views_model/auth_provider.dart';
+import '../../features/community/presentation/views_model/community_provider.dart';
 import '../../features/post/presentation/views_model/post_provider.dart';
 import '../models/post_model.dart';
 import '../theme/app_colors.dart';
@@ -15,6 +16,26 @@ import '../utils/assets.dart';
 class PostCard extends ConsumerWidget {
   final PostModel post;
   const PostCard({super.key, required this.post});
+
+  void deletePost(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog.adaptive(
+        title: const Text('Delete Post'),
+        content: Text('Are you sure you want to delete "${post.title}" ?'),
+        actions: [
+          TextButton(onPressed: () => Routemaster.of(context).pop(), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () {
+              ref.read(postNotifierProvider.notifier).deletePost(post);
+              Routemaster.of(context).pop();
+            },
+            child: Text('Delete', style: TextStyle(color: AppColors.redColor)),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,46 +49,36 @@ class PostCard extends ConsumerWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(post.communityAvatar),
-                radius: 20,
+              InkWell(
+                onTap: () => Routemaster.of(context).push('/r/${post.communityName}'),
+                child: CircleAvatar(
+                  backgroundImage: CachedNetworkImageProvider(post.communityAvatar),
+                  radius: 20,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'r/${post.communityName}',
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    GestureDetector(
+                      onTap: () => Routemaster.of(context).push('/r/${post.communityName}'),
+                      child: Text(
+                        'r/${post.communityName}',
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                    Text('u/${post.username}', style: const TextStyle(fontSize: 12)),
+                    GestureDetector(
+                      onTap: () => Routemaster.of(context).push('/u/${post.uid}'),
+                      child: Text('u/${post.username}', style: const TextStyle(fontSize: 12)),
+                    ),
                   ],
                 ),
               ),
               const Spacer(),
               if (post.uid == user.uid)
                 IconButton(
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog.adaptive(
-                      title: const Text('Delete Post'),
-                      content: Text('Are you sure you want to delete "${post.title}" ?'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Routemaster.of(context).pop(),
-                          child: const Text('Cancel'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            ref.read(postNotifierProvider.notifier).deletePost(post);
-                            Routemaster.of(context).pop();
-                          },
-                          child: Text('Delete', style: TextStyle(color: AppColors.redColor)),
-                        ),
-                      ],
-                    ),
-                  ),
+                  onPressed: () => deletePost(context, ref),
                   icon: Icon(Icons.delete_rounded, color: AppColors.redColor),
                 ),
             ],
@@ -116,6 +127,7 @@ class PostCard extends ConsumerWidget {
               ),
             ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
@@ -158,6 +170,24 @@ class PostCard extends ConsumerWidget {
                   ),
                 ],
               ),
+              ref
+                  .watch(getCommunityProvider(post.communityName))
+                  .when(
+                    data: (community) {
+                      if (community.mods.contains(user.uid)) {
+                        return IconButton(
+                          onPressed: () => deletePost(context, ref),
+                          icon: const Icon(Icons.admin_panel_settings_rounded),
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                    error: (error, stackTrace) => const Center(
+                      child: Text('Something Wrong Happend, Please Try Again Later'),
+                    ),
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                  ),
             ],
           ),
         ],
