@@ -1,34 +1,38 @@
-class Comment {
+class CommentModel {
   final String id;
   final String text;
   final DateTime createdAt;
   final String postId;
+  final String uid;
   final String username;
-  final String profilePic;
-  Comment({
+  final String profile;
+  CommentModel({
     required this.id,
     required this.text,
     required this.createdAt,
     required this.postId,
+    required this.uid,
     required this.username,
-    required this.profilePic,
+    required this.profile,
   });
 
-  Comment copyWith({
+  CommentModel copyWith({
     String? id,
     String? text,
     DateTime? createdAt,
     String? postId,
+    String? uid,
     String? username,
-    String? profilePic,
+    String? profile,
   }) {
-    return Comment(
+    return CommentModel(
       id: id ?? this.id,
       text: text ?? this.text,
       createdAt: createdAt ?? this.createdAt,
       postId: postId ?? this.postId,
+      uid: uid ?? this.uid,
       username: username ?? this.username,
-      profilePic: profilePic ?? this.profilePic,
+      profile: profile ?? this.profile,
     );
   }
 
@@ -38,24 +42,26 @@ class Comment {
       'text': text,
       'createdAt': createdAt.millisecondsSinceEpoch,
       'postId': postId,
+      'uid': uid,
       'username': username,
-      'profilePic': profilePic,
+      'profile': profile,
     };
   }
 
-  factory Comment.fromMap(Map<String, dynamic> map) {
-    return Comment(
+  factory CommentModel.fromMap(Map<String, dynamic> map) {
+    return CommentModel(
       id: map['id'] ?? '',
       text: map['text'] ?? '',
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
       postId: map['postId'] ?? '',
+      uid: map['uid'] ?? '',
       username: map['username'] ?? '',
-      profilePic: map['profilePic'] ?? '',
+      profile: map['profile'] ?? '',
     );
   }
 
   @override
   String toString() {
-    return 'Comment(id: $id, text: $text, createdAt: $createdAt, postId: $postId, username: $username, profilePic: $profilePic)';
+    return 'Comment(id: $id, text: $text, createdAt: $createdAt, postId: $postId, uid: $uid, username: $username, profile: $profile)';
   }
 }

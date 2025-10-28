@@ -42,8 +42,12 @@ class PostCard extends ConsumerWidget {
     final user = ref.watch(userProvider)!;
     final theme = ref.watch(themeNotifierProvider);
     return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5),
       padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(color: theme.drawerTheme.backgroundColor),
+      decoration: BoxDecoration(
+        color: theme.drawerTheme.backgroundColor,
+        borderRadius: BorderRadius.circular(15),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -161,14 +165,13 @@ class PostCard extends ConsumerWidget {
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.comment_rounded)),
-                  Text(
-                    '${post.commentCount == 0 ? 'Comment' : post.commentCount}',
-                    style: const TextStyle(fontSize: 17),
-                  ),
-                ],
+              TextButton.icon(
+                onPressed: () => Routemaster.of(context).push('/post/${post.id}/comments'),
+                label: Text(
+                  '${post.commentCount == 0 ? 'Comment' : post.commentCount}',
+                  style: const TextStyle(fontSize: 17),
+                ),
+                icon: const Icon(Icons.comment_rounded),
               ),
               ref
                   .watch(getCommunityProvider(post.communityName))

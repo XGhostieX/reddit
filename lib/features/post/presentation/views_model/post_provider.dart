@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../../../../core/models/comment_model.dart';
 import '../../../../core/models/community_model.dart';
 import '../../../../core/models/post_model.dart';
 import '../../../../core/utils/firebase_service.dart';
@@ -96,6 +97,10 @@ class PostNotifier extends StateNotifier<bool> {
     return postRepo.getPosts(communities);
   }
 
+  Stream<PostModel> getPost(String postId) {
+    return postRepo.getPost(postId);
+  }
+
   void deletePost(PostModel post) async {
     final result = await postRepo.deletePost(post);
     result.fold(
@@ -113,6 +118,30 @@ class PostNotifier extends StateNotifier<bool> {
     final result = await postRepo.downvotePost(post, uid);
     result.fold((failure) => displayMessage(failure.errMsg, true), (_) {});
   }
+
+  void addComment(String text, String postId) async {
+    final user = ref.read(userProvider)!;
+
+    final result = await postRepo.addComment(
+      CommentModel(
+        id: ref.read(uuidProvider).v1(),
+        text: text,
+        createdAt: DateTime.now(),
+        postId: postId,
+        uid: user.uid,
+        username: user.name,
+        profile: user.profile,
+      ),
+    );
+    result.fold(
+      (failure) => displayMessage(failure.errMsg, true),
+      (_) => displayMessage('Comment Posted Successfully!', false),
+    );
+  }
+
+  Stream<List<CommentModel>> getComments(String postId) {
+    return postRepo.getComments(postId);
+  }
 }
 
 final postNotifierProvider = StateNotifierProvider<PostNotifier, bool>(
@@ -122,4 +151,12 @@ final postNotifierProvider = StateNotifierProvider<PostNotifier, bool>(
 final getPostsProvider = StreamProvider.family(
   (ref, List<CommunityModel> communities) =>
       ref.watch(postNotifierProvider.notifier).getPosts(communities),
+);
+
+final getPostProvider = StreamProvider.family(
+  (ref, String postId) => ref.watch(postNotifierProvider.notifier).getPost(postId),
+);
+
+final getCommentsProvider = StreamProvider.family(
+  (ref, String postId) => ref.watch(postNotifierProvider.notifier).getComments(postId),
 );

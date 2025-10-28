@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/errors/failure.dart';
+import '../../../../core/models/comment_model.dart';
 import '../../../../core/models/community_model.dart';
 import '../../../../core/models/post_model.dart';
 import '../../../../core/utils/service_locator.dart';
@@ -14,6 +15,7 @@ class PostRepoImpl implements PostRepo {
   PostRepoImpl(this.firebaseFirestore);
 
   CollectionReference get _posts => firebaseFirestore.collection('posts');
+  CollectionReference get _comments => firebaseFirestore.collection('comments');
 
   @override
   Future<Either<Failure, void>> addPost(PostModel post) async {
@@ -97,6 +99,39 @@ class PostRepoImpl implements PostRepo {
     } catch (e) {
       return left(FirebaseFailure(e.toString()));
     }
+  }
+
+  @override
+  Stream<PostModel> getPost(String postId) {
+    return _posts
+        .doc(postId)
+        .snapshots()
+        .map((event) => PostModel.fromMap(event.data() as Map<String, dynamic>));
+  }
+
+  @override
+  Future<Either<Failure, void>> addComment(CommentModel comment) async {
+    try {
+      await _comments.doc(comment.id).set(comment.toMap());
+      return right(_posts.doc(comment.postId).update({'commentCount': FieldValue.increment(1)}));
+    } on FirebaseException catch (e) {
+      return left(FirebaseFailure.handleFirebaseException(e));
+    } catch (e) {
+      return left(FirebaseFailure(e.toString()));
+    }
+  }
+
+  @override
+  Stream<List<CommentModel>> getComments(String postId) {
+    return _comments
+        .where('postId', isEqualTo: postId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (event) => event.docs
+              .map((e) => CommentModel.fromMap(e.data() as Map<String, dynamic>))
+              .toList(),
+        );
   }
 }
 
