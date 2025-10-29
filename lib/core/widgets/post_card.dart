@@ -40,6 +40,7 @@ class PostCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider)!;
+    final isGuest = !user.isAuthenticated;
     final theme = ref.watch(themeNotifierProvider);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
@@ -147,8 +148,9 @@ class PostCard extends ConsumerWidget {
               Row(
                 children: [
                   IconButton(
-                    onPressed: () =>
-                        ref.read(postNotifierProvider.notifier).upvotePost(post, user.uid),
+                    onPressed: isGuest
+                        ? () {}
+                        : () => ref.read(postNotifierProvider.notifier).upvotePost(post, user.uid),
                     icon: Image.asset(
                       height: 20,
                       width: 20,
@@ -163,8 +165,10 @@ class PostCard extends ConsumerWidget {
                     style: const TextStyle(fontSize: 17),
                   ),
                   IconButton(
-                    onPressed: () =>
-                        ref.read(postNotifierProvider.notifier).downvotePost(post, user.uid),
+                    onPressed: isGuest
+                        ? () {}
+                        : () =>
+                              ref.read(postNotifierProvider.notifier).downvotePost(post, user.uid),
                     icon: Image.asset(
                       Assets.downvote,
                       height: 20,
@@ -185,30 +189,32 @@ class PostCard extends ConsumerWidget {
                 icon: const Icon(Icons.comment_rounded),
               ),
               IconButton(
-                onPressed: () => showDialog(
-                  context: context,
-                  builder: (context) => Dialog(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                        ),
-                        itemCount: user.awards.length,
-                        itemBuilder: (context, index) => InkWell(
-                          onTap: () => ref
-                              .read(postNotifierProvider.notifier)
-                              .awardPost(post, user.awards[index], context),
+                onPressed: isGuest
+                    ? () {}
+                    : () => showDialog(
+                        context: context,
+                        builder: (context) => Dialog(
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Image.asset(Assets.awards[user.awards[index]]!),
+                            padding: const EdgeInsets.all(20),
+                            child: GridView.builder(
+                              shrinkWrap: true,
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 4,
+                              ),
+                              itemCount: user.awards.length,
+                              itemBuilder: (context, index) => InkWell(
+                                onTap: () => ref
+                                    .read(postNotifierProvider.notifier)
+                                    .awardPost(post, user.awards[index], context),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.asset(Assets.awards[user.awards[index]]!),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
                 icon: const Icon(Icons.card_giftcard_rounded),
               ),
               ref

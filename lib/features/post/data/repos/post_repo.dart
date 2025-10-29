@@ -8,6 +8,7 @@ import '../../../../core/models/post_model.dart';
 abstract class PostRepo {
   Future<Either<Failure, void>> addPost(PostModel post);
   Stream<List<PostModel>> getPosts(List<CommunityModel> communities);
+  Stream<List<PostModel>> getGuestPosts();
   Stream<PostModel> getPost(String postId);
   Future<Either<Failure, void>> deletePost(PostModel post);
   Future<Either<Failure, void>> upvotePost(PostModel post, String uid);

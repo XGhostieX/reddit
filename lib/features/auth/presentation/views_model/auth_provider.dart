@@ -17,9 +17,9 @@ class AuthNotifier extends StateNotifier<bool> {
 
   Stream<User?> get authStateChange => authRepo.authStateChange;
 
-  void signInWithGoogle() async {
+  void signInWithGoogle(bool fromGuest) async {
     state = true;
-    final auth = await authRepo.signInWithGoogle();
+    final auth = await authRepo.signInWithGoogle(fromGuest);
     auth.fold(
       (failure) {
         state = false;

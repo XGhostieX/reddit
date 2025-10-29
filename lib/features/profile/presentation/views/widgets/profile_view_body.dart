@@ -14,6 +14,7 @@ class ProfileViewBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentUser = ref.read(userProvider)!;
     return ref
         .watch(getUserProvider(uid))
         .when(
@@ -52,17 +53,18 @@ class ProfileViewBody extends ConsumerWidget {
                             'u/${user.name}',
                             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
-                          OutlinedButton(
-                            onPressed: () =>
-                                Routemaster.of(context).push('/edit-profile/${user.uid}'),
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadiusGeometry.circular(20),
+                          if (currentUser.uid == user.uid)
+                            OutlinedButton(
+                              onPressed: () =>
+                                  Routemaster.of(context).push('/edit-profile/${user.uid}'),
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadiusGeometry.circular(20),
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 25),
                               ),
-                              padding: const EdgeInsets.symmetric(horizontal: 25),
+                              child: const Text('Edit Profile'),
                             ),
-                            child: const Text('Edit Profile'),
-                          ),
                         ],
                       ),
                     ),

@@ -14,7 +14,9 @@ class CommunityViewBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userProvider);
+    final user = ref.watch(userProvider)!;
+    final isGuest = !user.isAuthenticated;
+
     return ref
         .watch(getCommunityProvider(name))
         .when(
@@ -53,31 +55,33 @@ class CommunityViewBody extends ConsumerWidget {
                             'r/${community.name}',
                             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
-                          community.mods.contains(user!.uid)
-                              ? OutlinedButton(
-                                  onPressed: () => Routemaster.of(context).push('/mod-tools/$name'),
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadiusGeometry.circular(20),
+                          if (!isGuest)
+                            community.mods.contains(user.uid)
+                                ? OutlinedButton(
+                                    onPressed: () =>
+                                        Routemaster.of(context).push('/mod-tools/$name'),
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadiusGeometry.circular(20),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 25),
                                     ),
-                                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                                  ),
-                                  child: const Text('Mod Tools'),
-                                )
-                              : OutlinedButton(
-                                  onPressed: () => ref
-                                      .watch(communityNotifierProvider.notifier)
-                                      .joinLeaveCommunity(community),
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadiusGeometry.circular(20),
+                                    child: const Text('Mod Tools'),
+                                  )
+                                : OutlinedButton(
+                                    onPressed: () => ref
+                                        .watch(communityNotifierProvider.notifier)
+                                        .joinLeaveCommunity(community),
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadiusGeometry.circular(20),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 25),
                                     ),
-                                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                                    child: Text(
+                                      community.members.contains(user.uid) ? 'Leave' : 'Join',
+                                    ),
                                   ),
-                                  child: Text(
-                                    community.members.contains(user.uid) ? 'Leave' : 'Join',
-                                  ),
-                                ),
                         ],
                       ),
                     ),

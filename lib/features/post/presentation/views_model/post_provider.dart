@@ -102,9 +102,9 @@ class PostNotifier extends StateNotifier<bool> {
     return postRepo.getPosts(communities);
   }
 
-  Stream<PostModel> getPost(String postId) {
-    return postRepo.getPost(postId);
-  }
+  Stream<List<PostModel>> getGuestPosts() => postRepo.getGuestPosts();
+
+  Stream<PostModel> getPost(String postId) => postRepo.getPost(postId);
 
   void deletePost(PostModel post) async {
     if (post.image != null || post.image!.isNotEmpty) {
@@ -178,6 +178,10 @@ final postNotifierProvider = StateNotifierProvider<PostNotifier, bool>(
 final getPostsProvider = StreamProvider.family(
   (ref, List<CommunityModel> communities) =>
       ref.watch(postNotifierProvider.notifier).getPosts(communities),
+);
+
+final getGuestPostsProvider = StreamProvider(
+  (ref) => ref.watch(postNotifierProvider.notifier).getGuestPosts(),
 );
 
 final getPostProvider = StreamProvider.family(

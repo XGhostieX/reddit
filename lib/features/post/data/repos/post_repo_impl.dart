@@ -42,6 +42,18 @@ class PostRepoImpl implements PostRepo {
   }
 
   @override
+  Stream<List<PostModel>> getGuestPosts() {
+    return _posts
+        .orderBy('createdAt', descending: true)
+        .limit(10)
+        .snapshots()
+        .map(
+          (event) =>
+              event.docs.map((e) => PostModel.fromMap(e.data() as Map<String, dynamic>)).toList(),
+        );
+  }
+
+  @override
   Future<Either<Failure, void>> deletePost(PostModel post) async {
     try {
       return right(_posts.doc(post.id).delete());

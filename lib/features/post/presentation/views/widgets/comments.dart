@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../core/theme/app_theme.dart';
 import '../../../../../core/utils/functions/display_message.dart';
 import '../../../../../core/widgets/post_card.dart';
+import '../../../../auth/presentation/views_model/auth_provider.dart';
 import '../../views_model/post_provider.dart';
 import 'comment_card.dart';
 
@@ -26,6 +27,7 @@ class _CommentsState extends ConsumerState<Comments> {
 
   @override
   Widget build(BuildContext context) {
+    final isGuest = !ref.read(userProvider)!.isAuthenticated;
     final theme = ref.watch(themeNotifierProvider);
     return Scaffold(
       appBar: AppBar(),
@@ -57,41 +59,43 @@ class _CommentsState extends ConsumerState<Comments> {
                 const Center(child: Text('Something Wrong Happend, Please Try Again Later')),
             loading: () => const Center(child: CircularProgressIndicator()),
           ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10).copyWith(left: 20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          color: theme.drawerTheme.backgroundColor,
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: commentController,
-                decoration: const InputDecoration(
-                  hintText: 'Write a Comment...',
-                  border: InputBorder.none,
-                ),
+      bottomNavigationBar: isGuest
+          ? null
+          : Container(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10).copyWith(left: 20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: theme.drawerTheme.backgroundColor,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: commentController,
+                      decoration: const InputDecoration(
+                        hintText: 'Write a Comment...',
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      if (commentController.text.isEmpty) {
+                        displayMessage('Please Enter a Comment!', true);
+                      } else {
+                        ref
+                            .read(postNotifierProvider.notifier)
+                            .addComment(commentController.text.trim(), widget.postId);
+                        setState(() {
+                          commentController.text = '';
+                        });
+                      }
+                    },
+                    icon: const Icon(Icons.send_rounded),
+                  ),
+                ],
               ),
             ),
-            IconButton(
-              onPressed: () {
-                if (commentController.text.isEmpty) {
-                  displayMessage('Please Enter a Comment!', true);
-                } else {
-                  ref
-                      .read(postNotifierProvider.notifier)
-                      .addComment(commentController.text.trim(), widget.postId);
-                  setState(() {
-                    commentController.text = '';
-                  });
-                }
-              },
-              icon: const Icon(Icons.send_rounded),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

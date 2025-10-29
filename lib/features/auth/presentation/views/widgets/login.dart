@@ -34,7 +34,7 @@ class Login extends StatelessWidget {
                   : Image.asset(Assets.google, height: 40),
               onPressed: ref.watch(authNotifierProvider)
                   ? () {}
-                  : () => ref.read(authNotifierProvider.notifier).signInWithGoogle(),
+                  : () => ref.read(authNotifierProvider.notifier).signInWithGoogle(false),
             ),
           ),
           const SizedBox(height: 30),

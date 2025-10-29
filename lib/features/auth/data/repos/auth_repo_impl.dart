@@ -31,7 +31,7 @@ class AuthRepoImpl extends AuthRepo {
   Stream<User?> get authStateChange => firebaseAuth.authStateChanges();
 
   @override
-  Future<Either<Failure, UserModel>> signInWithGoogle() async {
+  Future<Either<Failure, UserModel>> signInWithGoogle(bool fromGuest) async {
     try {
       googleSignIn;
       final GoogleSignInAccount googleUser = await googleSignIn.initialize().then(
@@ -39,7 +39,12 @@ class AuthRepoImpl extends AuthRepo {
       );
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
       final credential = GoogleAuthProvider.credential(idToken: googleAuth.idToken);
-      UserCredential userCredential = await firebaseAuth.signInWithCredential(credential);
+      UserCredential userCredential;
+      if (fromGuest) {
+        userCredential = await firebaseAuth.currentUser!.linkWithCredential(credential);
+      } else {
+        userCredential = await firebaseAuth.signInWithCredential(credential);
+      }
       UserModel user;
       if (userCredential.additionalUserInfo!.isNewUser) {
         user = UserModel(
