@@ -17,11 +17,7 @@ class Login extends StatelessWidget {
           const SizedBox(height: 30),
           const Text(
             'Dive Into Anything',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.5,
-            ),
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, letterSpacing: 0.5),
           ),
           const SizedBox(height: 30),
           Image.asset(
@@ -32,17 +28,13 @@ class Login extends StatelessWidget {
           const SizedBox(height: 30),
           Consumer(
             builder: (context, ref, child) => RoundedBtn(
-              label: ref.watch(authNotifierProvider)
-                  ? ''
-                  : 'Continue with Google',
+              label: ref.watch(authNotifierProvider) ? '' : 'Continue with Google',
               icon: ref.watch(authNotifierProvider)
                   ? const CircularProgressIndicator()
                   : Image.asset(Assets.google, height: 40),
               onPressed: ref.watch(authNotifierProvider)
                   ? () {}
-                  : () => ref
-                        .read(authNotifierProvider.notifier)
-                        .signInWithGoogle(context),
+                  : () => ref.read(authNotifierProvider.notifier).signInWithGoogle(),
             ),
           ),
           const SizedBox(height: 30),

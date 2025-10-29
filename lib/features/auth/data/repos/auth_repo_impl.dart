@@ -87,6 +87,30 @@ class AuthRepoImpl extends AuthRepo {
       return Left(AuthFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, UserModel>> signInAsGuest() async {
+    try {
+      UserCredential userCredential = await firebaseAuth.signInAnonymously();
+      UserModel user;
+
+      user = UserModel(
+        name: 'Guest',
+        profile: Assets.avatar,
+        banner: Assets.banner,
+        uid: userCredential.user!.uid,
+        isAuthenticated: false,
+        karma: 0,
+        awards: [],
+      );
+      await _users.doc(userCredential.user!.uid).set(user.toMap());
+      return right(user);
+    } on FirebaseAuthException catch (e) {
+      return left(AuthFailure.handleFirebaseAuthException(e));
+    } catch (e) {
+      return Left(AuthFailure(e.toString()));
+    }
+  }
 }
 
 final authRepoProvider = Provider(

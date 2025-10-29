@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
@@ -18,7 +17,7 @@ class AuthNotifier extends StateNotifier<bool> {
 
   Stream<User?> get authStateChange => authRepo.authStateChange;
 
-  void signInWithGoogle(BuildContext context) async {
+  void signInWithGoogle() async {
     state = true;
     final auth = await authRepo.signInWithGoogle();
     auth.fold(
@@ -30,7 +29,22 @@ class AuthNotifier extends StateNotifier<bool> {
         state = false;
         ref.read(userProvider.notifier).update((state) => user);
         displayMessage('Welcome ${user.name}', false);
-        // Routemaster.of(context).replace('/home');
+      },
+    );
+  }
+
+  void signInAsGuest() async {
+    state = true;
+    final auth = await authRepo.signInAsGuest();
+    auth.fold(
+      (failure) {
+        state = false;
+        displayMessage(failure.errMsg, true);
+      },
+      (user) {
+        state = false;
+        ref.read(userProvider.notifier).update((state) => user);
+        displayMessage('Welcome ${user.name}', false);
       },
     );
   }

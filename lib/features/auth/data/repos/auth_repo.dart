@@ -6,6 +6,7 @@ import '../../../../core/models/user_model.dart';
 
 abstract class AuthRepo {
   Future<Either<Failure, UserModel>> signInWithGoogle();
+  Future<Either<Failure, UserModel>> signInAsGuest();
   Stream<UserModel> getUser(String uid);
   Stream<User?> get authStateChange;
   Future<Either<Failure, void>> signOut();
