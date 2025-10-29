@@ -21,6 +21,7 @@ class PostNotifier extends StateNotifier<bool> {
   final FirebaseService firebaseService;
   final PostRepo postRepo;
   final Ref ref;
+  late final user = ref.read(userProvider)!;
 
   PostNotifier(this.firebaseService, this.postRepo, this.ref) : super(false);
 
@@ -132,8 +133,6 @@ class PostNotifier extends StateNotifier<bool> {
   }
 
   void addComment(String text, String postId) async {
-    final user = ref.read(userProvider)!;
-
     final result = await postRepo.addComment(
       CommentModel(
         id: ref.read(uuidProvider).v1(),
@@ -157,6 +156,18 @@ class PostNotifier extends StateNotifier<bool> {
     final result = await postRepo.deleteComment(comment);
     ref.read(profileNotifierProvider.notifier).updateKarma(UserKarma.deleteComment);
     result.fold((failure) => displayMessage(failure.errMsg, true), (_) {});
+  }
+
+  void awardPost(PostModel post, String award, BuildContext context) async {
+    final result = await postRepo.awardPost(post, award, user.uid);
+    result.fold((failure) => displayMessage(failure.errMsg, true), (_) {
+      ref.read(profileNotifierProvider.notifier).updateKarma(UserKarma.awardPost);
+      ref.read(userProvider.notifier).update((state) {
+        state?.awards.remove(award);
+        return state;
+      });
+      Routemaster.of(context).pop();
+    });
   }
 }
 

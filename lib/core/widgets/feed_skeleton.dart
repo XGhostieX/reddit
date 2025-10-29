@@ -25,7 +25,7 @@ class FeedSkeleton extends StatelessWidget {
             username: 'username',
             uid: 'uid',
             createdAt: DateTime.now(),
-            awards: ['awards'],
+            awards: ['platinum'],
             description: 'description',
             image: '',
             link: 'https://youtu.be/1F3OGIFnW1k?si=yor6xyHMXDmjLADs',

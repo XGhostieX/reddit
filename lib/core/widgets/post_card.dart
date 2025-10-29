@@ -87,8 +87,19 @@ class PostCard extends ConsumerWidget {
                 ),
             ],
           ),
+          const SizedBox(height: 10),
+          if (post.awards.isNotEmpty)
+            SizedBox(
+              height: 25,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) => Image.asset(Assets.awards[post.awards[index]]!),
+                separatorBuilder: (context, index) => const SizedBox(width: 5),
+                itemCount: post.awards.length,
+              ),
+            ),
           Padding(
-            padding: const EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top: 5),
             child: Text(
               post.title,
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -172,6 +183,33 @@ class PostCard extends ConsumerWidget {
                   style: const TextStyle(fontSize: 17),
                 ),
                 icon: const Icon(Icons.comment_rounded),
+              ),
+              IconButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (context) => Dialog(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                        ),
+                        itemCount: user.awards.length,
+                        itemBuilder: (context, index) => InkWell(
+                          onTap: () => ref
+                              .read(postNotifierProvider.notifier)
+                              .awardPost(post, user.awards[index], context),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Image.asset(Assets.awards[user.awards[index]]!),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                icon: const Icon(Icons.card_giftcard_rounded),
               ),
               ref
                   .watch(getCommunityProvider(post.communityName))

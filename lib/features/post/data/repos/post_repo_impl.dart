@@ -14,6 +14,7 @@ class PostRepoImpl implements PostRepo {
 
   PostRepoImpl(this.firebaseFirestore);
 
+  CollectionReference get _users => firebaseFirestore.collection('users');
   CollectionReference get _posts => firebaseFirestore.collection('posts');
   CollectionReference get _comments => firebaseFirestore.collection('comments');
 
@@ -139,6 +140,27 @@ class PostRepoImpl implements PostRepo {
     try {
       await _comments.doc(comment.id).delete();
       return right(_posts.doc(comment.postId).update({'commentCount': FieldValue.increment(-1)}));
+    } on FirebaseException catch (e) {
+      return left(FirebaseFailure.handleFirebaseException(e));
+    } catch (e) {
+      return left(FirebaseFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> awardPost(PostModel post, String award, String uid) async {
+    try {
+      _posts.doc(post.id).update({
+        'awards': FieldValue.arrayUnion([award]),
+      });
+      _users.doc(uid).update({
+        'awards': FieldValue.arrayRemove([award]),
+      });
+      return right(
+        _users.doc(post.uid).update({
+          'awards': FieldValue.arrayUnion([award]),
+        }),
+      );
     } on FirebaseException catch (e) {
       return left(FirebaseFailure.handleFirebaseException(e));
     } catch (e) {

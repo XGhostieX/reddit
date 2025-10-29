@@ -49,7 +49,16 @@ class AuthRepoImpl extends AuthRepo {
           uid: userCredential.user!.uid,
           isAuthenticated: true,
           karma: 0,
-          awards: [],
+          awards: [
+            'awesome',
+            'gold',
+            'helpful',
+            'platinum',
+            'plusone',
+            'rocket',
+            'thankyou',
+            'til',
+          ],
         );
         await _users.doc(userCredential.user!.uid).set(user.toMap());
       } else {

@@ -15,4 +15,5 @@ abstract class PostRepo {
   Future<Either<Failure, void>> addComment(CommentModel comment);
   Stream<List<CommentModel>> getComments(String postId);
   Future<Either<Failure, void>> deleteComment(CommentModel comment);
+  Future<Either<Failure, void>> awardPost(PostModel post, String award, String uid);
 }
