@@ -26,6 +26,16 @@ class FirebaseService {
       return left(FirebaseFailure(e.toString()));
     }
   }
+
+  Future<Either<Failure, void>> deleteImage({required String path, required String id}) async {
+    try {
+      return right(await firebaseStorage.ref().child(path).child(id).delete());
+    } on FirebaseException catch (e) {
+      return left(FirebaseFailure.handleFirebaseStorageException(e));
+    } catch (e) {
+      return left(FirebaseFailure(e.toString()));
+    }
+  }
 }
 
 final firebaseServiceProvider = Provider(

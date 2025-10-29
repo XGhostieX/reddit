@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ThemeMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
+import '../utils/enums.dart';
 import '../utils/service_locator.dart';
 import 'app_colors.dart';
-
-enum ThemeMode { light, dark }
 
 class ThemeNotifier extends StateNotifier<ThemeData> {
   ThemeMode mode;

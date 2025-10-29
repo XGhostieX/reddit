@@ -7,4 +7,5 @@ import '../../../../core/models/user_model.dart';
 abstract class ProfileRepo {
   Future<Either<Failure, void>> editProfile(UserModel user);
   Stream<List<PostModel>> getUserPosts(String uid);
+  Future<Either<Failure, void>> updateKarma(UserModel user);
 }

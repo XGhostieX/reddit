@@ -14,4 +14,5 @@ abstract class PostRepo {
   Future<Either<Failure, void>> downvotePost(PostModel post, String uid);
   Future<Either<Failure, void>> addComment(CommentModel comment);
   Stream<List<CommentModel>> getComments(String postId);
+  Future<Either<Failure, void>> deleteComment(CommentModel comment);
 }

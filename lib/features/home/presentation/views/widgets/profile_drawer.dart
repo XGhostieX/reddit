@@ -5,6 +5,7 @@ import 'package:routemaster/routemaster.dart';
 
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_theme.dart';
+import '../../../../../core/utils/enums.dart';
 import '../../../../auth/presentation/views_model/auth_provider.dart';
 
 class ProfileDrawer extends ConsumerWidget {

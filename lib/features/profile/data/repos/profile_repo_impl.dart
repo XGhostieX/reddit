@@ -38,6 +38,17 @@ class ProfileRepoImpl implements ProfileRepo {
               event.docs.map((e) => PostModel.fromMap(e.data() as Map<String, dynamic>)).toList(),
         );
   }
+
+  @override
+  Future<Either<Failure, void>> updateKarma(UserModel user) async {
+    try {
+      return right(_users.doc(user.uid).update({'karma': user.karma}));
+    } on FirebaseException catch (e) {
+      return left(FirebaseFailure.handleFirebaseException(e));
+    } catch (e) {
+      return left(FirebaseFailure(e.toString()));
+    }
+  }
 }
 
 final profileRepoProvider = Provider((ref) => ProfileRepoImpl(ref.read(firebaseFirestoreProvider)));

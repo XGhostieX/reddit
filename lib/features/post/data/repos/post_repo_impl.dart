@@ -133,6 +133,18 @@ class PostRepoImpl implements PostRepo {
               .toList(),
         );
   }
+
+  @override
+  Future<Either<Failure, void>> deleteComment(CommentModel comment) async {
+    try {
+      await _comments.doc(comment.id).delete();
+      return right(_posts.doc(comment.postId).update({'commentCount': FieldValue.increment(-1)}));
+    } on FirebaseException catch (e) {
+      return left(FirebaseFailure.handleFirebaseException(e));
+    } catch (e) {
+      return left(FirebaseFailure(e.toString()));
+    }
+  }
 }
 
 final postRepoProvider = Provider((ref) => PostRepoImpl(ref.read(firebaseFirestoreProvider)));

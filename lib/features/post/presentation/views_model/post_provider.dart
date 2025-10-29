@@ -8,10 +8,12 @@ import 'package:routemaster/routemaster.dart';
 import '../../../../core/models/comment_model.dart';
 import '../../../../core/models/community_model.dart';
 import '../../../../core/models/post_model.dart';
+import '../../../../core/utils/enums.dart';
 import '../../../../core/utils/firebase_service.dart';
 import '../../../../core/utils/functions/display_message.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../auth/presentation/views_model/auth_provider.dart';
+import '../../../profile/presentation/views_model/profile_provider.dart';
 import '../../data/repos/post_repo.dart';
 import '../../data/repos/post_repo_impl.dart';
 
@@ -57,6 +59,7 @@ class PostNotifier extends StateNotifier<bool> {
             link: link,
           ),
         );
+        ref.read(profileNotifierProvider.notifier).updateKarma(UserKarma.imagePost);
         state = false;
         result.fold((failure) => displayMessage(failure.errMsg, true), (_) {
           displayMessage('Posted Successfully!', false);
@@ -82,6 +85,7 @@ class PostNotifier extends StateNotifier<bool> {
           link: link,
         ),
       );
+      ref.read(profileNotifierProvider.notifier).updateKarma(UserKarma.textPost);
       state = false;
       result.fold((failure) => displayMessage(failure.errMsg, true), (_) {
         displayMessage('Posted Successfully!', false);
@@ -102,7 +106,15 @@ class PostNotifier extends StateNotifier<bool> {
   }
 
   void deletePost(PostModel post) async {
+    if (post.image != null || post.image!.isNotEmpty) {
+      final imageResult = await firebaseService.deleteImage(
+        path: 'posts/${post.communityName}',
+        id: post.id,
+      );
+      imageResult.fold((failure) => displayMessage(failure.errMsg, true), (_) {});
+    }
     final result = await postRepo.deletePost(post);
+    ref.read(profileNotifierProvider.notifier).updateKarma(UserKarma.deletePost);
     result.fold(
       (failure) => displayMessage(failure.errMsg, true),
       (_) => displayMessage('Post Deleted Successfully!', false),
@@ -133,14 +145,18 @@ class PostNotifier extends StateNotifier<bool> {
         profile: user.profile,
       ),
     );
-    result.fold(
-      (failure) => displayMessage(failure.errMsg, true),
-      (_) => displayMessage('Comment Posted Successfully!', false),
-    );
+    ref.read(profileNotifierProvider.notifier).updateKarma(UserKarma.comment);
+    result.fold((failure) => displayMessage(failure.errMsg, true), (_) {});
   }
 
   Stream<List<CommentModel>> getComments(String postId) {
     return postRepo.getComments(postId);
+  }
+
+  void deleteComment(CommentModel comment) async {
+    final result = await postRepo.deleteComment(comment);
+    ref.read(profileNotifierProvider.notifier).updateKarma(UserKarma.deleteComment);
+    result.fold((failure) => displayMessage(failure.errMsg, true), (_) {});
   }
 }
 

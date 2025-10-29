@@ -7,10 +7,31 @@ import '../../../../../core/models/comment_model.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_theme.dart';
 import '../../../../auth/presentation/views_model/auth_provider.dart';
+import '../../views_model/post_provider.dart';
 
 class CommentCard extends ConsumerWidget {
   final CommentModel comment;
   const CommentCard({super.key, required this.comment});
+
+  void deleteComment(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog.adaptive(
+        title: const Text('Delete Comment'),
+        content: const Text('Are you sure you want to delete this comment ?'),
+        actions: [
+          TextButton(onPressed: () => Routemaster.of(context).pop(), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () {
+              ref.read(postNotifierProvider.notifier).deleteComment(comment);
+              Routemaster.of(context).pop();
+            },
+            child: Text('Delete', style: TextStyle(color: AppColors.redColor)),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -53,7 +74,7 @@ class CommentCard extends ConsumerWidget {
               const Spacer(),
               if (comment.uid == user.uid)
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () => deleteComment(context, ref),
                   icon: Icon(Icons.delete_rounded, color: AppColors.redColor),
                 ),
             ],

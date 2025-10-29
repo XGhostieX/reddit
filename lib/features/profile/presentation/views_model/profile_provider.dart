@@ -7,6 +7,7 @@ import 'package:routemaster/routemaster.dart';
 
 import '../../../../core/models/post_model.dart';
 import '../../../../core/models/user_model.dart';
+import '../../../../core/utils/enums.dart';
 import '../../../../core/utils/firebase_service.dart';
 import '../../../../core/utils/functions/display_message.dart';
 import '../../../auth/presentation/views_model/auth_provider.dart';
@@ -61,6 +62,16 @@ class ProfileNotifier extends StateNotifier<bool> {
   }
 
   Stream<List<PostModel>> getUserPosts(String uid) => profileRepo.getUserPosts(uid);
+
+  void updateKarma(UserKarma karma) async {
+    UserModel user = ref.read(userProvider)!;
+    user = user.copyWith(karma: user.karma + karma.karma);
+    final result = await profileRepo.updateKarma(user);
+    result.fold(
+      (failure) => displayMessage(failure.errMsg, true),
+      (_) => ref.read(userProvider.notifier).update((state) => user),
+    );
+  }
 }
 
 final profileNotifierProvider = StateNotifierProvider<ProfileNotifier, bool>(
