@@ -1,6 +1,8 @@
+import 'package:auto_hide_keyboard/auto_hide_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_theme.dart';
 import '../../../../../core/utils/functions/display_message.dart';
 import '../../../../../core/widgets/post_card.dart';
@@ -62,7 +64,12 @@ class _CommentsState extends ConsumerState<Comments> {
       bottomNavigationBar: isGuest
           ? null
           : Container(
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10).copyWith(left: 20),
+              padding: EdgeInsets.only(
+                top: 5,
+                right: 10,
+                left: 20,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 5,
+              ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
                 color: theme.drawerTheme.backgroundColor,
@@ -70,16 +77,19 @@ class _CommentsState extends ConsumerState<Comments> {
               child: Row(
                 children: [
                   Expanded(
-                    child: TextField(
-                      controller: commentController,
-                      decoration: const InputDecoration(
-                        hintText: 'Write a Comment...',
-                        border: InputBorder.none,
+                    child: AutoHideKeyboard(
+                      child: TextField(
+                        controller: commentController,
+                        decoration: const InputDecoration(
+                          hintText: 'Write a Comment...',
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
                   ),
                   IconButton(
                     onPressed: () {
+                      FocusManager.instance.primaryFocus?.unfocus();
                       if (commentController.text.isEmpty) {
                         displayMessage('Please Enter a Comment!', true);
                       } else {
@@ -91,7 +101,7 @@ class _CommentsState extends ConsumerState<Comments> {
                         });
                       }
                     },
-                    icon: const Icon(Icons.send_rounded),
+                    icon: Icon(Icons.send_rounded, color: AppColors.redColor),
                   ),
                 ],
               ),

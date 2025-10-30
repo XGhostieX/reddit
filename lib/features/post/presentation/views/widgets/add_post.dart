@@ -15,7 +15,8 @@ import '../../../../community/presentation/views_model/community_provider.dart';
 import '../../views_model/post_provider.dart';
 
 class AddPost extends ConsumerStatefulWidget {
-  const AddPost({super.key});
+  final VoidCallback navigateToHome;
+  const AddPost(this.navigateToHome, {super.key});
 
   @override
   ConsumerState<AddPost> createState() => _AddPostState();
@@ -75,10 +76,10 @@ class _AddPostState extends ConsumerState<AddPost> {
                         if (communities.isEmpty) {
                           return const Text('Please Join a Community Before Posting');
                         }
-                        selectedCommunity = communities[0];
                         return DropdownButton(
                           underline: const SizedBox(),
-                          value: selectedCommunity ?? communities[0],
+                          hint: const Text('Your Communities'),
+                          value: selectedCommunity,
                           items: communities
                               .map(
                                 (community) => DropdownMenuItem(
@@ -137,6 +138,7 @@ class _AddPostState extends ConsumerState<AddPost> {
                               link: linkController.text.isEmpty ? null : linkController.text.trim(),
                               image: image,
                             );
+                        widget.navigateToHome();
                       }
                     },
               icon: isLoading ? const CircularProgressIndicator() : null,

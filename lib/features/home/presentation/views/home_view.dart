@@ -20,7 +20,14 @@ class HomeView extends ConsumerStatefulWidget {
 
 class _HomeViewState extends ConsumerState<HomeView> {
   int _page = 0;
-  final tabsWidgets = const [HomeViewBody(), AddPost()];
+  late final tabsWidgets = [const HomeViewBody(), AddPost(navigateToHome)];
+
+  void navigateToHome() {
+    setState(() {
+      _page = 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = ref.watch(themeNotifierProvider);

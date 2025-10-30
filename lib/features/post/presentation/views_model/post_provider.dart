@@ -107,7 +107,7 @@ class PostNotifier extends StateNotifier<bool> {
   Stream<PostModel> getPost(String postId) => postRepo.getPost(postId);
 
   void deletePost(PostModel post) async {
-    if (post.image != null || post.image!.isNotEmpty) {
+    if (post.image!.isNotEmpty) {
       final imageResult = await firebaseService.deleteImage(
         path: 'posts/${post.communityName}',
         id: post.id,

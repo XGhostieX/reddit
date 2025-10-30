@@ -222,9 +222,9 @@ class PostCard extends ConsumerWidget {
                   .when(
                     data: (community) {
                       if (community.mods.contains(user.uid)) {
-                        return IconButton(
-                          onPressed: () => deletePost(context, ref),
-                          icon: const Icon(Icons.admin_panel_settings_rounded),
+                        return InkWell(
+                          onTap: () => deletePost(context, ref),
+                          child: const Icon(Icons.admin_panel_settings_rounded),
                         );
                       } else {
                         return const SizedBox();

@@ -24,8 +24,17 @@ class ThemeNotifier extends StateNotifier<ThemeData> {
       elevation: 0,
       iconTheme: IconThemeData(color: AppColors.blackColor),
     ),
-    drawerTheme: const DrawerThemeData(backgroundColor: AppColors.whiteColor),
+    drawerTheme: const DrawerThemeData(backgroundColor: Color(0xF5F5F5F5)),
     primaryColor: AppColors.redColor,
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(foregroundColor: AppColors.blackColor),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(foregroundColor: AppColors.whiteColor),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(foregroundColor: AppColors.blackColor),
+    ),
     // backgroundColor: AppColors.whiteColor,
   );
 
@@ -41,6 +50,15 @@ class ThemeNotifier extends StateNotifier<ThemeData> {
     drawerTheme: const DrawerThemeData(backgroundColor: AppColors.drawerColor),
     primaryColor: AppColors.redColor,
     colorScheme: const ColorScheme.dark(surface: AppColors.drawerColor),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(foregroundColor: AppColors.whiteColor),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(foregroundColor: AppColors.whiteColor),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(foregroundColor: AppColors.whiteColor),
+    ),
   );
 
   void getTheme() async {
